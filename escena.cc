@@ -25,8 +25,9 @@ Escena::Escena()
     cubo = new Cubo(100) ;
     tetraedro = new Tetraedro(100) ;
     ply = new ObjPLY("plys/goosesincolor.ply") ;
-    cono = new Cono(11, 20, 70, 40) ;
     cilindro = new Cilindro(11,20,70,40) ;
+    objRev = new ObjRevolucion("plys/peon.ply",20,true,true) ;
+    cono = new Cono(11, 20, 70, 40) ;
     esfera = new Esfera(30,20,40) ;
     modoDib = false ;
     modo = 2;
@@ -81,7 +82,7 @@ void Escena::dibujar()
          malla = tetraedro ;
          break ;
        case PLY:
-         malla = esfera ;
+         malla = cilindro ;
          //glPushMatrix();
          //glScalef(50,50,50) ;
          break;

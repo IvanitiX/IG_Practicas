@@ -1,5 +1,6 @@
 #include "aux.h"
 #include "objrevolucion.h"
+#include <iostream>
 
 
 
@@ -19,7 +20,7 @@ ObjRevolucion::ObjRevolucion() {}
 ObjRevolucion::ObjRevolucion(const std::string & archivo, int num_instancias, bool tapa_sup, bool tapa_inf) {
    // completar ......(práctica 2)
    ply::read_vertices( archivo, this->v);
-   crearMalla(this->v,num_instancias);
+   crearMalla(this->v,num_instancias,tapa_sup,tapa_inf);
 }
 
 // *****************************************************************************
@@ -27,12 +28,14 @@ ObjRevolucion::ObjRevolucion(const std::string & archivo, int num_instancias, bo
 
  
 ObjRevolucion::ObjRevolucion(std::vector<Tupla3f> archivo, int num_instancias, bool tapa_sup, bool tapa_inf) {
-    crearMalla(archivo,num_instancias) ;
+    crearMalla(archivo,num_instancias,tapa_sup,tapa_inf) ;
 }
 
-void ObjRevolucion::crearMalla(std::vector<Tupla3f> perfil_original, int num_instancias, bool con_tapas) {
+void ObjRevolucion::crearMalla(std::vector<Tupla3f> perfil_original, int num_instancias, bool tapa_sup, bool tapa_inf) {
    crearTablaVertices(perfil_original,num_instancias) ;
    crearTablaTriangulos(perfil_original,num_instancias) ;
+   if (tapa_inf) crearTapaInferior(perfil_original, num_instancias) ;
+   if (tapa_sup) crearTapaSuperior(perfil_original, num_instancias) ;
 }
 
 void ObjRevolucion::crearTablaVertices(std::vector<Tupla3f> perfil_original, int num_instancias){
@@ -72,4 +75,21 @@ Tupla3f ObjRevolucion::Rotacion(Tupla3f vertice, unsigned instancia, unsigned nu
 	rotado = new Tupla3f (x,y,z) ;
 
 	return *rotado;
+}
+
+void ObjRevolucion::crearTapaInferior(std::vector<Tupla3f> perfil_original, int num_instancias){
+   float y = perfil_original[0][1] ;
+   v.push_back({0, y , 0});
+         int tam = v.size() ;
+   for (int i = 0 ; i < num_instancias; i++ ){
+         f.push_back( { v.size()-1,((i+2)*perfil_original.size())%(v.size()-1),((i+1)*perfil_original.size())%(v.size()-1)} );
+   }
+}
+
+void ObjRevolucion::crearTapaSuperior(std::vector<Tupla3f> perfil_original, int num_instancias){
+   v.push_back({0, perfil_original[perfil_original.size()-1][1], 0});
+   int tam = v.size() ;
+   for (int i = 0 ; i < num_instancias-1; i++ ){
+         f.push_back( { v.size()-1,((i+1)*perfil_original.size()-1)%(v.size()-1),((i+2)*perfil_original.size()-1)%(v.size()-1)} );
+   }
 }
