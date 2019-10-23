@@ -82,9 +82,9 @@ void Escena::dibujar()
          malla = tetraedro ;
          break ;
        case PLY:
-         malla = cilindro ;
-         //glPushMatrix();
-         //glScalef(50,50,50) ;
+         malla = objRev ;
+         glPushMatrix();
+         glScalef(50,50,50) ;
          break;
     }
 

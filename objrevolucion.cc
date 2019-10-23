@@ -89,7 +89,7 @@ void ObjRevolucion::crearTapaInferior(std::vector<Tupla3f> perfil_original, int 
 void ObjRevolucion::crearTapaSuperior(std::vector<Tupla3f> perfil_original, int num_instancias){
    v.push_back({0, perfil_original[perfil_original.size()-1][1], 0});
    int tam = v.size() ;
-   for (int i = 0 ; i < num_instancias-1; i++ ){
-         f.push_back( { v.size()-1,((i+1)*perfil_original.size()-1)%(v.size()-1),((i+2)*perfil_original.size()-1)%(v.size()-1)} );
+   for (int i = 0 ; i < num_instancias; i++ ){
+         f.push_back( { v.size()-1,((i+1)*perfil_original.size()-1)%(v.size()-2),((i+2)*perfil_original.size()-1)%(v.size()-2)} );
    }
 }
