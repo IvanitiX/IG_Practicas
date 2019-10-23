@@ -7,4 +7,10 @@ Cono::Cono(const int num_vert_perfil,const int num_instancias_perf, const float 
     perfil.push_back( {radio - radio*(i/num_vert_perfil), 0.0 + altura*(i/num_vert_perfil), 0.0});
   }
   ObjRevolucion::crearMalla(perfil, num_instancias_perf, false, true) ;
+
+  for(unsigned i = 0 ; i < v.size() ; i++){
+    colores_solido.push_back({0,0.68,1}) ;
+    colores_puntos.push_back({127,127,0}) ;
+    colores_linea.push_back({0,0,0}) ;
+  }
 }

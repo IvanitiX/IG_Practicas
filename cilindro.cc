@@ -6,4 +6,9 @@ Cilindro::Cilindro(const int num_vert_perfil,const int num_instancias_perf,const
   for ( unsigned i = 0; i <= num_vert_perfil; i+=1){
     perfil.push_back( {radio, 0.0 + altura*(i*1.0/num_vert_perfil), 0.0});  }
   ObjRevolucion::crearMalla(perfil, num_instancias_perf, true, true) ;
+  for(unsigned j = 0 ; j < v.size() ; j++){
+    colores_solido.push_back({127,127,0}) ;
+    colores_puntos.push_back({255,0,0}) ;
+    colores_linea.push_back({0,0,0}) ;
+  }
 }

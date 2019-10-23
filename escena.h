@@ -47,6 +47,7 @@ class Escena
    Cubo * cubo = nullptr ; // es importante inicializarlo a 'nullptr'
    Tetraedro * tetraedro= nullptr ; // es importante inicializarlo a 'nullptr'
    Malla3D * malla= nullptr;
+   Malla3D * malla2 = nullptr ;
    bool modoDib; //Ve qué modo de dibujado hace
    int modo;
    ObjPLY * ply = nullptr ;

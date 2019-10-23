@@ -24,7 +24,7 @@ Escena::Escena()
 
     cubo = new Cubo(100) ;
     tetraedro = new Tetraedro(100) ;
-    ply = new ObjPLY("plys/goosesincolor.ply") ;
+    ply = new ObjPLY("plys/ant.ply") ;
     cilindro = new Cilindro(11,20,70,40) ;
     objRev = new ObjRevolucion("plys/peon.ply",20,true,true) ;
     cono = new Cono(11, 20, 70, 40) ;
@@ -74,19 +74,19 @@ void Escena::dibujar()
        case DIFERIDO : modoDib = false; break ;
     }
 
-    switch(subObjeto){
+    /*switch(subObjeto){
        case CUBO: 
          malla = cubo ;
          break ;
        case TETRAEDRO: 
          malla = tetraedro ;
          break ;
-       case PLY:
-         malla = objRev ;
-         glPushMatrix();
-         glScalef(50,50,50) ;
+       case PLY:     
+         glScalef(5,5,5) ;  
+         malla = ply ;
+         //malla2 = cilindro ;
          break;
-    }
+    }*/
 
     switch(subVisual){
          case PUNTOS: modo = 0 ; subVisual = OUTV ; break;
@@ -96,8 +96,51 @@ void Escena::dibujar()
     }
 
 
-    if (malla != nullptr) 
-      malla->draw(modo, modoDib);
+    /*if (malla != nullptr){
+         malla->draw(modo, modoDib);
+    }
+
+    if (malla2 != nullptr){
+      glPushMatrix();
+         glTranslatef(2,-35,0);
+         glScalef(1,2,1) ;
+         //glScalef(1,-2,1) ;
+         malla2->draw(modo,modoDib) ;
+      glPopMatrix() ;
+      }*/
+
+      glPushMatrix();
+         glTranslatef(0,0,-100);
+         glTranslatef(0,10,0);
+         cubo->draw(modo, modoDib) ;
+      glPopMatrix();
+      glPushMatrix();
+         glTranslatef(0,0,100);
+         glTranslatef(0,10,0);
+         tetraedro->draw(modo, modoDib) ;
+      glPopMatrix();
+      glPushMatrix();
+         glTranslatef(-100,0,0);
+         cilindro->draw(modo, modoDib) ;
+      glPopMatrix();
+      glPushMatrix();
+         glTranslatef(100,0,0);
+         cono->draw(modo, modoDib) ;
+      glPopMatrix();
+      glPushMatrix();
+         glTranslatef(0,10,0);
+         esfera->draw(modo, modoDib) ;
+      glPopMatrix();
+      glPushMatrix();
+         glTranslatef(100,10,-100);
+         ply->draw(modo, modoDib) ;
+      glPopMatrix();
+      glPushMatrix();
+         glTranslatef(-100,10,100);
+         glScalef(30,30,30);
+         objRev->draw(modo, modoDib) ;
+      glPopMatrix();
+
     
     
     // COMPLETAR
