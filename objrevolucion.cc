@@ -22,10 +22,12 @@ ObjRevolucion::ObjRevolucion(const std::string & archivo, int num_instancias, bo
    ply::read_vertices( archivo, this->v);
    crearMalla(this->v,num_instancias,tapa_sup,tapa_inf);
    for(unsigned i = 0 ; i < v.size() ; i++){
-    colores_solido.push_back({0,0,128}) ;
-    colores_puntos.push_back({127,127,0}) ;
+    colores_solido.push_back({0,0,0.5}) ;
+    colores_puntos.push_back({0.49,0.49,0}) ;
     colores_linea.push_back({0,0,0}) ;
   }
+   color_impar_ajedrez = {0,0,0.5} ;
+   color_par_ajedrez = {0,0,0} ;
 }
 
 // *****************************************************************************

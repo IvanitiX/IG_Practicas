@@ -22,11 +22,11 @@ Tetraedro::Tetraedro(float Size = 1.0)
 
 	f = {{0,1,3}, {1,2,3}, {2,0,3}, {0,2,1}};
 
-	colores_solido = {{ 0,127,127},{ 0,127,127},{ 0,127,127},{ 0,127,127}} ;
-	colores_linea = {{0,255,0},{0,255,0},{0,255,0},{0,255,0}} ;
-	colores_puntos = {{0,0,255},{0,0,255},{0,0,255},{0,0,255}} ;
-	colores_ajedrez_par = {{0,255,0},{0,255,0}} ;
-	colores_ajedrez_impar = {{255,0,0},{255,0,0}} ;
+	colores_solido = {{ 0,0.5,0.5},{ 0,0.5,0.5},{ 0,0.5,0.5},{ 0,0.5,0.5}} ;
+	colores_linea = {{0,1,0},{0,1,0},{0,1,0},{0,1,0}} ;
+	colores_puntos = {{0,0,1},{0,0,1},{0,0,1},{0,0,1}} ;
+	color_impar_ajedrez = { 0,0.5,0.5} ;
+    color_par_ajedrez = {0,0,0} ;
 
 	//ColorearObjeto();
 

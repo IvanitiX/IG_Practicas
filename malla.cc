@@ -48,30 +48,35 @@ void Malla3D::drawPuntos(bool modoDibujado){
 void Malla3D::drawAjedrez(bool modoDibujado){
       std::vector<Tupla3i> caras_pares ;
       std::vector<Tupla3i> caras_impares ;
+      std::vector<Tupla3f> color_impar, color_par;
+
+      for(int cara = 0 ; cara < f.size() ; cara++){
+         if (cara%2==0){
+            caras_pares.push_back(f[cara]) ;
+         }
+         else{
+            caras_impares.push_back(f[cara]) ;
+         }
+      }
+               int breakpoint = 0 ;
+      for (int i = 0; i < v.size(); i++){
+		   color_impar.push_back(color_impar_ajedrez);
+		   color_par.push_back(color_par_ajedrez);
+	   }
 
       glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
       glShadeModel(GL_FLAT) ;
 
       glEnableClientState(GL_VERTEX_ARRAY) ;
-      glVertexPointer (3,GL_FLOAT,0,v.data());
+         glVertexPointer (3,GL_FLOAT,0,v.data());
 
-      for(int cara = 0 ; cara < f.size() ; cara++){
-         if (cara%2==0)
-            caras_pares.push_back(f.at(cara)) ;
-         else 
-            caras_impares.push_back(f.at(cara)) ;
-      }
+         glEnableClientState(GL_COLOR_ARRAY) ;
+            glColorPointer(3,GL_FLOAT,0,color_par.data()) ;
+            glDrawElements(GL_TRIANGLES,caras_pares.size()*3,GL_UNSIGNED_INT,caras_pares.data()) ;
 
-      glEnableClientState(GL_COLOR_ARRAY) ;
-      glColorPointer(3,GL_FLOAT,0,colores_ajedrez_par.data()) ;
-      glDrawElements(GL_TRIANGLES,caras_pares.size()*3,GL_UNSIGNED_INT,caras_pares.data()) ;
-      glDisableClientState(GL_COLOR_ARRAY) ;
-
-
-      glEnableClientState(GL_COLOR_ARRAY) ;
-      glColorPointer(3,GL_FLOAT,0,colores_ajedrez_impar.data()) ;
-      glDrawElements(GL_TRIANGLES,caras_impares.size()*3,GL_UNSIGNED_INT,caras_impares.data()) ;
-      glDisableClientState(GL_COLOR_ARRAY) ;
+            glColorPointer(3,GL_FLOAT,0,color_impar.data()) ;
+            glDrawElements(GL_TRIANGLES,caras_impares.size()*3,GL_UNSIGNED_INT,caras_impares.data()) ;
+         glDisableClientState(GL_COLOR_ARRAY) ;
 
       glDisableClientState(GL_VERTEX_ARRAY) ;
 
