@@ -28,7 +28,7 @@ Escena::Escena()
     cilindro = new Cilindro(11,20,70,40) ;
     objRev = new ObjRevolucion("plys/peon.ply",20,true,true) ;
     cono = new Cono(11, 20, 70, 40) ;
-    esfera = new Esfera(30,20,40) ;
+    esfera = new Esfera(80,20,40) ;
     modoDib = false ;
     modo = 2;
 }

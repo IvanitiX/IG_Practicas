@@ -47,7 +47,6 @@ void ObjRevolucion::crearMalla(std::vector<Tupla3f> perfil_original, int num_ins
 
 void ObjRevolucion::crearTablaVertices(std::vector<Tupla3f> perfil_original, int num_instancias){
    v.clear() ;
-
    for (unsigned i = 0 ; i < num_instancias ; i++){
       for (unsigned j = 0 ; j < perfil_original.size() ; j++){
          Tupla3f instancia_perfil_rotado = Rotacion(/*Añadir eje,*/ perfil_original[j],i,num_instancias) ;
