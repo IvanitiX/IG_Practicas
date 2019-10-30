@@ -3,12 +3,13 @@
 Esfera::Esfera(const int num_vert_perfil,const int num_instancias_perf,const float radio){
     std::vector<Tupla3f> perfil;
 
-  for ( int i = 1; i <= num_vert_perfil -1  ; i++){
+  for ( int i = 1; i < num_vert_perfil  ; ++i){
       float y = -radio + 2*radio*(i*1.0/num_vert_perfil);
       float x = sqrt(radio*radio - y*y) ;
     perfil.push_back( {x, y, 0.0});
   }
-  
+  perfil.push_back({0,-radio,0});
+  perfil.push_back({0,radio,0}) ;
 
   ObjRevolucion::crearMalla(perfil, num_instancias_perf,true,true) ;
 

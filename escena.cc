@@ -25,10 +25,10 @@ Escena::Escena()
     cubo = new Cubo(100) ;
     tetraedro = new Tetraedro(100) ;
     ply = new ObjPLY("plys/ant.ply") ;
-    cilindro = new Cilindro(11,20,70,40) ;
+    cilindro = new Cilindro(1,20,70,40) ;
     objRev = new ObjRevolucion("plys/peon.ply",20,true,true) ;
-    cono = new Cono(11, 20, 70, 40) ;
-    esfera = new Esfera(80,20,40) ;
+    cono = new Cono(0, 20, 70, 40) ;
+    esfera = new Esfera(10,10,40) ;
     modoDib = false ;
     modo = 2;
 }
@@ -121,7 +121,7 @@ void Escena::dibujar()
       glPopMatrix();
       glPushMatrix();
          glTranslatef(-100,0,0);
-         cilindro->draw(modo, modoDib) ;
+         esfera->draw(modo, modoDib) ;
       glPopMatrix();
       glPushMatrix();
          glTranslatef(100,0,0);
@@ -129,7 +129,7 @@ void Escena::dibujar()
       glPopMatrix();
       glPushMatrix();
          glTranslatef(0,10,0);
-         esfera->draw(modo, modoDib) ;
+         cilindro->draw(modo, modoDib) ;
       glPopMatrix();
       glPushMatrix();
          glTranslatef(100,10,-100);
