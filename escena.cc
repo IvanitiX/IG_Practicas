@@ -26,7 +26,7 @@ Escena::Escena()
     tetraedro = new Tetraedro(100) ;
     ply = new ObjPLY("plys/ant.ply") ;
     cilindro = new Cilindro(1,20,70,40) ;
-    objRev = new ObjRevolucion("plys/peon.ply",20,true,true) ;
+    objRev = new ObjRevolucion("plys/peon_inverso.ply",20,true,true) ;
     cono = new Cono(0, 20, 70, 40) ;
     esfera = new Esfera(10,10,40) ;
     modoDib = false ;
@@ -140,7 +140,7 @@ void Escena::dibujar()
          glScalef(30,30,30);
          objRev->draw(modo, modoDib) ;
       glPopMatrix();
-
+      modo =-4 ;
     
     
     // COMPLETAR

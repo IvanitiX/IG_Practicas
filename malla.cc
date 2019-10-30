@@ -135,7 +135,7 @@ void Malla3D::draw_ModoDiferido()
 void Malla3D::draw(int modo, bool modoDibujado)
 {
    // completar .....(práctica 1)
-   for(int i=0 ; i < modos.size() && ultimoModo != modo ; i++){
+   for(int i=0 ; i < modos.size() ; i++){
       if (i == modo){
          modos[i] = !modos[i] ;
       }
@@ -158,4 +158,23 @@ GLuint Malla3D::CrearVBO (GLuint tipo_vbo, GLuint tamanio_bytes, GLvoid * punter
    glBindBuffer(tipo_vbo, 0) ;
    return id_vbo ;
 }
+
+/*void Malla3D::calcular_normales(){
+   std::vector<Tupla3f> normales_cara ;
+   //Primera parte: normales de caras
+   for (unsigned i = 0 ; i < f.size() ; i++){
+      Tupla3i cara = f[i] ;
+      Tupla3f a = {v[cara[2]]-v[cara[1]]} ;
+      Tupla3f b = {v[cara[1]]-v[cara[0]]} ;
+      float x = a[1]*b[2] - a[2]*b[1] ;
+      float y = a[2]*b[0] - a[0]*b[2];
+      float z = a[0]*b[1] - a[1]*b[0];
+      unsigned modulo = sqrt(x*x+y*y+z*z) ;
+      Tupla3f p_vec = {x/modulo,y/modulo,z/modulo} ;
+      normales_cara.push_back(p_vec) ;
+   }
+   //Segunda parte: normales de vértices
+
+
+}*/
 

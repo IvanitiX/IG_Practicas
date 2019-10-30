@@ -20,12 +20,35 @@ ObjRevolucion::ObjRevolucion() {}
 ObjRevolucion::ObjRevolucion(const std::string & archivo, int num_instancias, bool tapa_sup, bool tapa_inf) {
    // completar ......(práctica 2)
    ply::read_vertices( archivo, this->v);
-       std::vector<Tupla3f> formato ;
+       std::vector<Tupla3f> temporal, temporal_polos, formato ;
+    if(v[0][1] - v[1][1] < 0)
     for(int i = 0 ; i < v.size() ; i++){
-       formato.push_back(v[i]) ;
+       temporal.push_back(v[i]) ;
     }
-    formato.push_back({0,v[0][1],0}) ;
-    formato.push_back({0,v[v.size()-1][1],0}) ;
+    else
+    {
+       for(int i = 0 ; i < v.size() ; i++){
+       temporal.push_back(v[v.size() - i - 1]) ;
+    }
+    }
+
+   for(int i = 0 ; i < temporal.size() ; i++){
+      if(v[i][1] == 0) 
+       temporal_polos.push_back(temporal[i]) ;
+      else
+       formato.push_back(temporal[i]) ;
+    }
+    if (temporal_polos.size() < 1)
+      formato.push_back({0,temporal[0][1],0}) ;
+   else
+      formato.push_back(temporal_polos[0]) ;
+   
+    if (temporal_polos.size() < 2)
+      formato.push_back({0,temporal[temporal.size()-1][1],0}) ;
+    else
+      formato.push_back(temporal_polos[1]) ;
+   
+    
    crearMalla(formato,num_instancias,tapa_sup,tapa_inf);
    for(unsigned i = 0 ; i < v.size() ; i++){
     colores_solido.push_back({0,0,0.5}) ;
