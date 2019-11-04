@@ -56,6 +56,8 @@ class Escena
    Cilindro * cilindro = nullptr ;
    Esfera * esfera = nullptr ;
 
+   int veces_sup = 0, veces_inf = 0 ;
+
    
    public:
 

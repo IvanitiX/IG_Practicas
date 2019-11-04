@@ -30,15 +30,23 @@ class ObjRevolucion : public Malla3D
        ObjRevolucion();
        ObjRevolucion(const std::string & archivo, int num_instancias, bool tapa_sup=false, bool tapa_inf=false) ;
        ObjRevolucion(std::vector<Tupla3f> archivo, int num_instancias, bool tapa_sup=false, bool tapa_inf=false) ;
+       void detectarTapas(std::vector<Tupla3f>) ;
+       void modificarTapas(bool, bool) ;
    protected:
        void crearMalla(std::vector<Tupla3f> perfil_original, int num_instancias, bool tapa_sup=false, bool tapa_inf=false);
+       std::vector<Tupla3f> formatoPerfil(std::vector<Tupla3f> perfil_original) ;
    private:
        void crearTablaVertices(std::vector<Tupla3f> perfil_original, int num_instancias) ;
        void crearTablaTriangulos(std::vector<Tupla3f> perfil_original, int num_instancias) ;
        Tupla3f Rotacion(/*char eje,*/Tupla3f vertice, unsigned instancia, unsigned num_instancias) ;
        void crearTapaSuperior(std::vector<Tupla3f> perfil_original, int num_instancias);
        void crearTapaInferior(std::vector<Tupla3f> perfil_original, int num_instancias);
+
+      /*Variables*/
+       bool extremos[2] ;
        const float PI = 3.1415926535897932384 ;
+       std::vector<Tupla3f> perfil_asociado ;
+       int instancias = 0 ;
 } ;
 
 

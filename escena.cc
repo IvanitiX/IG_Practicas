@@ -27,7 +27,7 @@ Escena::Escena()
     ply = new ObjPLY("plys/ant.ply") ;
     cilindro = new Cilindro(1,20,70,40) ;
     objRev = new ObjRevolucion("plys/peon_inverso.ply",20,true,true) ;
-    cono = new Cono(0, 20, 70, 40) ;
+    cono = new Cono(1, 20, 70, 40) ;
     esfera = new Esfera(10,10,40) ;
     modoDib = false ;
     modo = 2;
@@ -195,7 +195,18 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          modoMenu=SELDIBUJADO;
          break ;
          // COMPLETAR con los diferentes opciones de teclado
-            
+         case 'S' :
+         // ESTAMOS EN MODO SELECCION DE DIBUJADO
+         cout << "Tapa superior" << endl ;
+         veces_sup++ ;
+         objRev->modificarTapas(veces_sup%2 == 0,veces_inf%2 == 0) ;
+         break ;
+         case 'I' :
+         // ESTAMOS EN MODO SELECCION DE DIBUJADO
+         cout << "Tapa inferior" << endl ;
+         veces_inf++ ;
+         objRev->modificarTapas(veces_sup%2 == 0, veces_inf%2 == 0) ;
+         break ;
    }
 
    if (modoMenu == SELOBJETO){
