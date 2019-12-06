@@ -16,7 +16,8 @@ LuzDireccional::LuzDireccional(const Tupla2f & direccion,
 
 void LuzDireccional::variarAnguloAlfa(float incremento){
     alfa += incremento ;
-    EsfericasACartesianas() ;
+    alfa = (float) ((int)alfa%360) ;
+    //this->Rotar() ;
     std::cout << "Alfa : " << alfa << " - X/Y/Z : " << posicion[0] << "/" << posicion[1] << "/" << posicion[2] << std::endl ;
     this->activar() ;
 }
@@ -24,14 +25,24 @@ void LuzDireccional::variarAnguloAlfa(float incremento){
 
 void LuzDireccional::variarAnguloBeta(float incremento){
     beta += incremento ;
-    EsfericasACartesianas() ;
+    beta = (float) ((int)beta%360) ;
+    //this->Rotar() ;
     std::cout << "Beta : " << beta << " - X/Y/Z : " << posicion[0] << "/" << posicion[1] << "/" << posicion[2] << std::endl ;
     this->activar() ;
 }
 
-void LuzDireccional::EsfericasACartesianas(){
-    float radio = 202.0 ;
-    posicion[0] = posicion[0]*radio*sin(alfa)*cos(beta) ;
-    posicion[1] = posicion[1]*radio*sin(alfa)*sin(beta) ;
-    posicion[2] = radio*cos(beta) ;
+void LuzDireccional::Rotar(){
+    posicion[0] = posicion[0] + cos(beta)*posicion[0] ;
+    posicion[1] = posicion[1] + cos(alfa)*posicion[1] ;
+}
+
+void LuzDireccional::activar(){
+    glLightfv(id, GL_AMBIENT, colorAmbiente) ;
+    glLightfv(id, GL_SPECULAR, colorEspecular) ;
+    glLightfv(id, GL_DIFFUSE, colorDifuso) ;
+    glRotatef(alfa,0.0,1.0,0.0) ;
+    glRotatef(beta,-1.0,0.0,0.0) ;
+    glLightfv(id,GL_POSITION,posicion) ;
+    glEnable(GL_LIGHTING) ;
+    glEnable(id) ;
 }

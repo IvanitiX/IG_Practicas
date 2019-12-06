@@ -98,6 +98,16 @@ void Escena::dibujar()
       glEnable (GL_NORMALIZE) ;
       peondif -> setMaterial(new MaterialUltraDifuso()) ;
       peonesp -> setMaterial(new MaterialUltraEspecular()) ;
+      /*Las luces son al final objetos que se ponen en la escena,
+      por lo que se pueden tratarse como si fueran figuras*/
+      glPushMatrix() ;
+         if(luces[0]) luzdir->activar() ;
+         else luzdir->desactivar() ;
+      glPopMatrix() ;
+         if(luces[1]) luzpos->activar() ;
+         else luzpos->desactivar() ;
+      glPushMatrix() ;
+      glPopMatrix() ;
       glPushMatrix();
          glTranslatef(0,0,-100);
          glTranslatef(0,10,0);
@@ -268,14 +278,12 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
                subIlum = LUZ0 ;
                cout << "Activado/desactivado : Luz Direccional" << teclaluz << endl ;
                luces[0] = !luces[0] ;
-               luces[0] ? luzdir->activar() : luzdir->desactivar() ;
             break ;
             case '1':
                teclamodo = false ;
                subIlum = LUZ1 ;
                cout << "Activado/desactivado : Luz Posicional" << endl ;
                luces[1] = !luces[1] ;
-               luces[1] ? luzpos->activar() : luzpos->desactivar() ;
             break;
          }
       }
@@ -285,8 +293,8 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
         
          if (toupper(tecla) == 'A') angulo = false;
          if (toupper(tecla) == 'B') angulo = true ;
-         if (tecla == '<') angulo? luzdir->variarAnguloBeta(-1.0) : luzdir->variarAnguloAlfa(-1.0) ;
-         if (tecla == '>') angulo? luzdir->variarAnguloBeta(1.0) : luzdir->variarAnguloAlfa(1.0) ;
+         if (tecla == '<') angulo? luzdir->variarAnguloBeta(-10.0) : luzdir->variarAnguloAlfa(-10.0) ;
+         if (tecla == '>') angulo? luzdir->variarAnguloBeta(10.0) : luzdir->variarAnguloAlfa(10.0) ;
       }
    }
 
