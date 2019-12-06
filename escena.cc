@@ -293,8 +293,8 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
         
          if (toupper(tecla) == 'A') angulo = false;
          if (toupper(tecla) == 'B') angulo = true ;
-         if (tecla == '<') angulo? luzdir->variarAnguloBeta(-10.0) : luzdir->variarAnguloAlfa(-10.0) ;
-         if (tecla == '>') angulo? luzdir->variarAnguloBeta(10.0) : luzdir->variarAnguloAlfa(10.0) ;
+         if (tecla == '<') angulo? luzdir->variarAnguloBeta(-1.0) : luzdir->variarAnguloAlfa(-1.0) ;
+         if (tecla == '>') angulo? luzdir->variarAnguloBeta(1.0) : luzdir->variarAnguloAlfa(1.0) ;
       }
    }
 
