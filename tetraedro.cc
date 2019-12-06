@@ -1,6 +1,7 @@
 #include "aux.h"
 #include "malla.h"
 #include "tetraedro.h"
+#include "materiales.h"
 
 Tetraedro::Tetraedro(float Size = 1.0)
 {
@@ -27,6 +28,9 @@ Tetraedro::Tetraedro(float Size = 1.0)
 	colores_puntos = {{0,0,1},{0,0,1},{0,0,1},{0,0,1}} ;
 	color_impar_ajedrez = { 0,0.5,0.5} ;
     color_par_ajedrez = {0,0,0} ;
+
+	MaterialCian * mc = new MaterialCian() ;
+	material = mc ;
 
 	//ColorearObjeto();
 

@@ -19,4 +19,7 @@ Cono::Cono(const int num_vert_perfil,const int num_instancias_perf, const float 
 
   color_impar_ajedrez = {0,0.2,1} ;
   color_par_ajedrez = {0,0,0} ;
+
+  MaterialMagenta * mm = new MaterialMagenta() ;
+  material = mm ;
 }

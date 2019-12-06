@@ -17,4 +17,7 @@ Cilindro::Cilindro(const int num_vert_perfil,const int num_instancias_perf,const
   }
   color_impar_ajedrez = {0.5,0.5,0} ;
   color_par_ajedrez = {0,0,0} ;
+
+  MaterialAmarillo * ma = new MaterialAmarillo() ;
+  material = ma ;
 }

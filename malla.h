@@ -11,6 +11,8 @@
 #define MALLA3D_H_INCLUDED
 
 #include "aux.h"
+#include "material.h"
+#include "materiales.h"
 
 // *****************************************************************************
 //
@@ -25,6 +27,7 @@ class Malla3D
    void drawSolido(bool);
    void drawPuntos(bool);
    void drawAjedrez(bool) ;
+   void drawIluminacion(bool) ;
 
    // dibuja el objeto en modo inmediato
    void draw_ModoInmediato();
@@ -37,6 +40,8 @@ class Malla3D
    // o bien a 'draw_ModoDiferido' (modo diferido, VBOs)
    void draw(int, bool) ;
 
+   void setMaterial (Material * mat) ;
+
    
 
    protected:
@@ -48,14 +53,16 @@ class Malla3D
    std::vector<Tupla3f> colores_solido, colores_linea, colores_puntos ;
    std::vector<Tupla3f> normales ;
    Tupla3f color_par_ajedrez, color_impar_ajedrez;
+   Material * material = nullptr;
 
 
    GLuint CrearVBO(GLuint, GLuint, GLvoid*) ;
 
    GLuint id_vbo_ver = 0 , id_vbo_tri = 0 ;
 
-   std::vector<bool> modos = {false,false,false,false} ;
+   std::vector<bool> modos = {false,false,false,false,false} ;
    int ultimoModo = -1 ;
+
 
 
    // completar: tabla de colores, tabla de normales de vértices

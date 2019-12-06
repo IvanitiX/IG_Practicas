@@ -19,6 +19,9 @@ ObjPLY::ObjPLY( const std::string & nombre_archivo )
   }
   color_impar_ajedrez = {0.5,0,0.5} ;
   color_par_ajedrez = {0,0,0} ;
+
+  MaterialCian * mc = new MaterialCian() ;
+  material = mc ;
 }
 
 

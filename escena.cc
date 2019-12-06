@@ -26,9 +26,12 @@ Escena::Escena()
     tetraedro = new Tetraedro(100) ;
     ply = new ObjPLY("plys/ant.ply") ;
     cilindro = new Cilindro(1,20,70,40) ;
-    objRev = new ObjRevolucion("plys/peon_inverso.ply",20,true,true) ;
+    peonesp = new ObjRevolucion("plys/peon_inverso.ply",20,true,true) ;
+    peondif = new ObjRevolucion("plys/peon.ply",20,true,true) ;
     cono = new Cono(1, 20, 70, 40) ;
-    esfera = new Esfera(10,10,40) ;
+    esfera = new Esfera(50,50,40) ;
+    luzdir = new LuzDireccional({0.0,30.0},GL_LIGHT1,{1.0,1.0,1.0,0.0},{0.0,0.0,0.0,0.0},{1.0,1.0,1.0,0.0}) ;
+    luzpos = new LuzPosicional({30.0,0.0,0.0},GL_LIGHT2,{1.0,1.0,1.0,1.0},{1.0,1.0,1.0,1.0},{1.0,1.0,1.0,1.0}) ;
     modoDib = false ;
     modo = 2;
 }
@@ -63,56 +66,42 @@ void Escena::inicializar( int UI_window_width, int UI_window_height )
 
 void Escena::dibujar()
 {
+   glDisable (GL_LIGHTING) ;
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // Limpiar la pantalla
 	change_observer();
+   glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER,GL_TRUE) ;
    glEnable(GL_CULL_FACE);
    glEnableClientState(GL_COLOR_ARRAY) ;
     ejes.draw();
 
     switch(subDibujo){
-       case INMEDIATO: modoDib = true ; break ;
-       case DIFERIDO : modoDib = false; break ;
+      if (glIsEnabled(GL_LIGHTING)){
+         case SUAVE : modoDib = true ; break ;
+         case PLANO : modoDib = false ; break ;
+       }
+       else{
+          case INMEDIATO: modoDib = true ; break ;
+          case DIFERIDO : modoDib = false; break ;
+       }
     }
 
-    /*switch(subObjeto){
-       case CUBO: 
-         malla = cubo ;
-         break ;
-       case TETRAEDRO: 
-         malla = tetraedro ;
-         break ;
-       case PLY:     
-         glScalef(5,5,5) ;  
-         malla = ply ;
-         //malla2 = cilindro ;
-         break;
-    }*/
-
-    switch(subVisual){
+  switch(subVisual){
+         
          case PUNTOS: modo = 0 ; subVisual = OUTV ; break;
          case LINEAS: modo = 1 ; subVisual = OUTV ; break;
          case COLOR: modo = 2; subVisual = OUTV ; break;
          case AJEDREZ: modo = 3; subVisual = OUTV ;  break;
+         case ILUMINACION: modo = 4 ; break;
     }
 
-
-    /*if (malla != nullptr){
-         malla->draw(modo, modoDib);
-    }
-
-    if (malla2 != nullptr){
-      glPushMatrix();
-         glTranslatef(2,-35,0);
-         glScalef(1,2,1) ;
-         //glScalef(1,-2,1) ;
-         malla2->draw(modo,modoDib) ;
-      glPopMatrix() ;
-      }*/
-
+      if (!teclamodo) modo = -4 ;
+      glEnable (GL_NORMALIZE) ;
+      peondif -> setMaterial(new MaterialUltraDifuso()) ;
+      peonesp -> setMaterial(new MaterialUltraEspecular()) ;
       glPushMatrix();
          glTranslatef(0,0,-100);
          glTranslatef(0,10,0);
-         cubo->draw(modo, modoDib) ;
+         esfera->draw(modo, modoDib) ;
       glPopMatrix();
       glPushMatrix();
          glTranslatef(0,0,100);
@@ -121,7 +110,7 @@ void Escena::dibujar()
       glPopMatrix();
       glPushMatrix();
          glTranslatef(-100,0,0);
-         esfera->draw(modo, modoDib) ;
+         cubo->draw(modo, modoDib) ;
       glPopMatrix();
       glPushMatrix();
          glTranslatef(100,0,0);
@@ -138,8 +127,14 @@ void Escena::dibujar()
       glPushMatrix();
          glTranslatef(-100,10,100);
          glScalef(30,30,30);
-         objRev->draw(modo, modoDib) ;
+         peonesp->draw(modo, modoDib) ;
       glPopMatrix();
+      glPushMatrix();
+         glTranslatef(-100,10,-100);
+         glScalef(30,30,30);
+         peondif->draw(modo, modoDib) ;
+      glPopMatrix();
+      glDisable(GL_NORMALIZE) ;
       modo =-4 ;
     
     
@@ -167,10 +162,14 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
    using namespace std ;
    cout << "Tecla pulsada: '" << tecla << "'" << endl;
    bool salir=false;
+   teclamodo = false ;
+  
    switch( toupper(tecla) )
    {
       case 'Q' :
          if (modoMenu!=NADA){
+            teclamodo = false ;
+           
             modoMenu=NADA; 
             cout << "Volviendo a menú principal" << endl ;    
          }      
@@ -195,21 +194,25 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          modoMenu=SELDIBUJADO;
          break ;
          // COMPLETAR con los diferentes opciones de teclado
-         case 'S' :
-         // ESTAMOS EN MODO SELECCION DE DIBUJADO
-         cout << "Tapa superior" << endl ;
-         veces_sup++ ;
-         objRev->modificarTapas(veces_sup%2 == 0,veces_inf%2 == 0) ;
+         case 'N' :
+         if (modoMenu == NADA){
+            cout << "Tapa superior" << endl ;
+            veces_sup++ ;
+            peondif->modificarTapas(veces_sup%2 == 0,veces_inf%2 == 0) ;
+         }
          break ;
-         case 'I' :
-         // ESTAMOS EN MODO SELECCION DE DIBUJADO
-         cout << "Tapa inferior" << endl ;
-         veces_inf++ ;
-         objRev->modificarTapas(veces_sup%2 == 0, veces_inf%2 == 0) ;
+         case 'M' :
+         if (modoMenu == NADA){
+            cout << "Tapa inferior" << endl ;
+            veces_inf++ ;
+            peondif->modificarTapas(veces_sup%2 == 0, veces_inf%2 == 0) ;
+         }
          break ;
    }
 
    if (modoMenu == SELOBJETO){
+      teclamodo = false ;
+     
       switch (toupper(tecla)){
          case 'C'://Ver cubo
             cout << "Activado/desactivado : cubo" << endl ;
@@ -227,6 +230,8 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
    }
 
    if (modoMenu == SELVISUALIZACION){
+      teclamodo = true ;
+     
       switch (toupper(tecla)){
          case 'P':
             cout << "Activado/desactivado : modo puntos" << endl ;
@@ -244,21 +249,72 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             subVisual=COLOR ;
          break;
          case 'A':
+            if (subIlum != LUZ0){
             cout << "Activado/desactivado : modo ajedrez" << endl ;
             subVisual=AJEDREZ ;
+            }
          break;
+         case 'I':
+           
+            cout << "Activado/desactivado : Iluminacion" << endl ;
+            subVisual=ILUMINACION;
+         break;
+      }
+
+      if (subVisual == ILUMINACION){
+         switch (toupper(tecla)){
+            case '0':
+               teclamodo = false ;
+               subIlum = LUZ0 ;
+               cout << "Activado/desactivado : Luz Direccional" << teclaluz << endl ;
+               luces[0] = !luces[0] ;
+               luces[0] ? luzdir->activar() : luzdir->desactivar() ;
+            break ;
+            case '1':
+               teclamodo = false ;
+               subIlum = LUZ1 ;
+               cout << "Activado/desactivado : Luz Posicional" << endl ;
+               luces[1] = !luces[1] ;
+               luces[1] ? luzpos->activar() : luzpos->desactivar() ;
+            break;
+         }
+      }
+
+      if (glIsEnabled(GL_LIGHT1)){
+         teclamodo = false ;
+        
+         if (toupper(tecla) == 'A') angulo = false;
+         if (toupper(tecla) == 'B') angulo = true ;
+         if (tecla == '<') angulo? luzdir->variarAnguloBeta(-1.0) : luzdir->variarAnguloAlfa(-1.0) ;
+         if (tecla == '>') angulo? luzdir->variarAnguloBeta(1.0) : luzdir->variarAnguloAlfa(1.0) ;
       }
    }
 
    if(modoMenu == SELDIBUJADO){ 
+      teclamodo = false ;
+     
       switch (toupper(tecla)){
          case '1':
-            cout << "Activado/desactivado : Modo inmediato" << endl ;
-            subDibujo =INMEDIATO ;
+            if(glIsEnabled(GL_LIGHTING) == false){
+               cout << "Activado/desactivado : Modo inmediato" << endl ;
+               subDibujo =INMEDIATO ;
+            }
+            else
+            {
+               cout << "Activado/desactivado : Iluminacion suave" << endl ;
+               subDibujo =SUAVE ;
+            }
          break;
          case '2':
-            cout << "Activado/desactivado : Modo diferido" << endl ;
-            subDibujo = DIFERIDO ;
+            if(glIsEnabled(GL_LIGHTING) == false){
+               cout << "Activado/desactivado : Modo diferido" << endl ;
+               subDibujo =DIFERIDO ;
+            }
+            else
+            {
+               cout << "Activado/desactivado : Iluminacion plana" << endl ;
+               subDibujo =PLANO ;
+            }
          break;
       }
    }
@@ -270,6 +326,8 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
 
 void Escena::teclaEspecial( int Tecla1, int x, int y )
 {
+   teclamodo = false ;
+  
    switch ( Tecla1 )
    {
 	   case GLUT_KEY_LEFT:
@@ -307,7 +365,7 @@ void Escena::change_projection( const float ratio_xy )
    glMatrixMode( GL_PROJECTION );
    glLoadIdentity();
    const float wx = float(Height)*ratio_xy ;
-   glFrustum( -wx, wx, -Height, Height, Front_plane, Back_plane );
+   glFrustum( -Width, Width, -Height, Height, Front_plane, Back_plane );
 }
 //**************************************************************************
 // Funcion que se invoca cuando cambia el tamaño de la ventana

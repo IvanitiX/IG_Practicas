@@ -29,6 +29,9 @@ ObjRevolucion::ObjRevolucion(const std::string & archivo, int num_instancias, bo
   }
    color_impar_ajedrez = {0,0,0.5} ;
    color_par_ajedrez = {0,0,0} ;
+
+   MaterialAmarillo * ma = new MaterialAmarillo() ;
+   material = ma ;
 }
 
 // *****************************************************************************

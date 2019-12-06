@@ -21,4 +21,7 @@ Esfera::Esfera(const int num_vert_perfil,const int num_instancias_perf,const flo
   }
   color_impar_ajedrez = {0,0.82,0.5} ;
   color_par_ajedrez = {0,0,0} ;
+
+  MaterialMagenta * mm = new MaterialMagenta() ;
+  material = mm ;
 }

@@ -23,6 +23,7 @@ void Malla3D::drawLineas(bool modoDibujado){
 void Malla3D::drawSolido(bool modoDibujado){
       glEnable(GL_COLOR_ARRAY) ;
       glColorPointer(3,GL_FLOAT,0,colores_solido.data()) ;
+      glColorMaterial(GL_FRONT_AND_BACK,GL_AMBIENT) ;
       glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
       if(modoDibujado){
          draw_ModoInmediato();
@@ -65,7 +66,6 @@ void Malla3D::drawAjedrez(bool modoDibujado){
 	   }
 
       glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
-      glShadeModel(GL_FLAT) ;
 
       glEnableClientState(GL_VERTEX_ARRAY) ;
          glVertexPointer (3,GL_FLOAT,0,v.data());
@@ -95,14 +95,17 @@ void Malla3D::draw_ModoInmediato()
 {
    //habilitar uso de un array de vértices
    glEnableClientState(GL_VERTEX_ARRAY);
+   glEnableClientState(GL_NORMAL_ARRAY) ;
    //  indicar el formato y la dirección de memoria del array de vértices
    //  (son tuplas de 3 valoresfloat, sin espacio entre ellas)
    glVertexPointer( 3,GL_FLOAT, 0, v.data() ) ;
+   glNormalPointer (GL_FLOAT,0,normales.data()) ;
    //  visualizar, indicando: tipo de primitiva, número de índices,
    //  tipo de los índices, y dirección de la tabla de índices
    glDrawElements(GL_TRIANGLES,f.size()*3,GL_UNSIGNED_INT,f.data() );
    //  deshabilitar array de vértices
    glDisableClientState(GL_VERTEX_ARRAY);
+   glDisableClientState(GL_NORMAL_ARRAY) ;
 
 }
 // -----------------------------------------------------------------------------
@@ -121,13 +124,18 @@ void Malla3D::draw_ModoDiferido()
    glVertexPointer(3,GL_FLOAT,0,0);
    glBindBuffer(GL_ARRAY_BUFFER, 0);
    glEnableClientState(GL_VERTEX_ARRAY);
+   glEnableClientState(GL_NORMAL_ARRAY) ;
+
+   glNormalPointer (GL_FLOAT,0,normales.data()) ;
 
    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,id_vbo_tri);
    glDrawElements(GL_TRIANGLES, 3*f.size(), GL_UNSIGNED_INT, 0);
    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
    glDisableClientState(GL_VERTEX_ARRAY);
+   glDisableClientState(GL_NORMAL_ARRAY) ;
 }
+
 // -----------------------------------------------------------------------------
 // Función de visualización de la malla,
 // puede llamar a  draw_ModoInmediato o bien a draw_ModoDiferido
@@ -141,12 +149,18 @@ void Malla3D::draw(int modo, bool modoDibujado)
       }
    }
    ultimoModo = modo ;
+      if(modos[4] == true){
+         for (int i = 0 ; i < (modos.size() - 2) ; i++) modos[i] = false ;
+         drawIluminacion(modoDibujado) ;
+      }
+      else{
+         glDisable(GL_LIGHTING) ;
+         if(modos[0] == true) drawPuntos(modoDibujado) ;
+         if(modos[1] == true) drawLineas(modoDibujado) ;
+         if(modos[2] == true) drawSolido(modoDibujado) ;
+         if(modos[3] == true) drawAjedrez(modoDibujado) ;
+      }
 
-   if(modos[0] == true) drawPuntos(modoDibujado) ;
-   if(modos[1] == true) drawLineas(modoDibujado) ;
-   if(modos[2] == true) drawSolido(modoDibujado) ;
-   if(modos[3] == true) drawAjedrez(modoDibujado) ;
-   
 }
 
 
@@ -159,22 +173,73 @@ GLuint Malla3D::CrearVBO (GLuint tipo_vbo, GLuint tamanio_bytes, GLvoid * punter
    return id_vbo ;
 }
 
-/*void Malla3D::calcular_normales(){
+void Malla3D::calcular_normales(){
    std::vector<Tupla3f> normales_cara ;
    //Primera parte: normales de caras
    for (unsigned i = 0 ; i < f.size() ; i++){
       Tupla3i cara = f[i] ;
       Tupla3f a = {v[cara[2]]-v[cara[1]]} ;
       Tupla3f b = {v[cara[1]]-v[cara[0]]} ;
-      float x = a[1]*b[2] - a[2]*b[1] ;
-      float y = a[2]*b[0] - a[0]*b[2];
-      float z = a[0]*b[1] - a[1]*b[0];
-      unsigned modulo = sqrt(x*x+y*y+z*z) ;
+      Tupla3f res = a.cross(b) ;
+      float x = res[0] ;
+      float y = res[1];
+      float z = res[2];
+      float modulo = sqrt(x*x+y*y+z*z) ;
       Tupla3f p_vec = {x/modulo,y/modulo,z/modulo} ;
-      normales_cara.push_back(p_vec) ;
+      normales_cara.push_back(p_vec/modulo) ;
    }
    //Segunda parte: normales de vértices
+   //2.1 Poner las normales de vértices a 0
+   for (unsigned i = 0 ; i < v.size() ; i++){
+      normales.push_back({0,0,0}) ;
+   }
+   //2.2 Ir añadiendo las normales según las caras.
+   for (unsigned i = 0 ; i < f.size() ; i++){
+      Tupla3i vertices_cara = f[i] ;
+      normales[vertices_cara[0]] = (normales[vertices_cara[0]] + normales_cara[i]);
+      normales[vertices_cara[1]] = (normales[vertices_cara[1]] + normales_cara[i]);
+      normales[vertices_cara[2]] = (normales[vertices_cara[2]] + normales_cara[i]);
+   }
 
+   for (unsigned i = 0 ; i < v.size() ; i++){
+      Tupla3f input = normales[i] ;
+      float x = input[0] ;
+      float y = input[1] ;
+      float z = input[2] ;
+      float modulo = sqrt(x*x+y*y+z*z) ;
+      normales[i] = {x/modulo,y/modulo,z/modulo} ;
+   }
+}
 
-}*/
+   void Malla3D::setMaterial(Material * mat){
+      *material = *mat ;
+   }
+
+   void Malla3D::drawIluminacion(bool modoDibujado){
+
+      calcular_normales() ;
+
+      modoDibujado ? glShadeModel(GL_SMOOTH) : glShadeModel(GL_FLAT);
+      glEnable(GL_NORMALIZE);
+      glEnable(GL_LIGHTING);
+
+         if (material != nullptr) {
+            material->aplicar() ;
+         }
+
+         
+         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+         glEnableClientState(GL_NORMAL_ARRAY) ;
+         glEnableClientState(GL_VERTEX_ARRAY) ;
+
+         glNormalPointer(GL_FLOAT,0,normales.data()) ;
+         glVertexPointer(3,GL_FLOAT,0,v.data()) ;
+         glDrawElements(GL_TRIANGLES,3*f.size(),GL_UNSIGNED_INT,f.data()) ;
+
+         glDisable(GL_NORMAL_ARRAY) ;
+         glDisable(GL_VERTEX_ARRAY) ;
+
+         glDisable(GL_NORMALIZE);
+         glDisable(GL_LIGHTING);
+   }
 

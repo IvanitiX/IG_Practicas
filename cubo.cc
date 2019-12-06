@@ -13,7 +13,7 @@ Cubo::Cubo(float lado)
 
 
    // inicializar la tabla de vértices
-   v =  {  { -lado/2, -lado/2, -lado/2 }, // 0
+   v =  {         { -lado/2, -lado/2, -lado/2 }, // 0
                   { -lado/2, -lado/2, +lado/2 }, // 1
                   { -lado/2, +lado/2, -lado/2 }, // 2
                   { -lado/2, +lado/2, +lado/2 }, // 3
@@ -35,13 +35,15 @@ Cubo::Cubo(float lado)
                   { 3, 7, 2 }, { 2, 7, 6 }
                 } ;
 
-   colores_solido = {{1,0,0},{1,0,0},{1,0,0},{1,0,0},
-              {1,0,0},{1,0,0},{1,0,0},{1,0,0}} ;
-   colores_linea = {{0,1,0},{0,1,0},{0,1,0},{0,1,0},
-               {0,1,0},{0,1,0},{0,1,0},{0,1,0}} ;
-   colores_puntos = {{0,0,1},{0,0,1},{0,0,1},{0,0,1},
-               {0,0,1},{0,0,1},{0,0,1},{0,0,1}} ;
+   for (unsigned i = 0 ; i < v.size() ; i++){
+      colores_solido.push_back({1,0,0}) ;
+      colores_linea.push_back({0,1,0}) ;
+      colores_puntos.push_back({0,0,1}) ;
+   }
+
    color_impar_ajedrez = {1,0.25,1} ;
    color_par_ajedrez = {0,0,0} ;
+
+   material = new Material({0.0,0.3,0.0,1.0}, {0.0,0.5,0.0,1.0}, {0.0,0.7,0.0,1.0}, 100.0) ;
 }
 
