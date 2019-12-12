@@ -31,7 +31,7 @@ Escena::Escena()
     peondif = new ObjRevolucion("plys/peon.ply",20,true,true) ;
     cono = new Cono(1, 20, 70, 40) ;
     esfera = new Esfera(50,50,40) ;
-    luzdir = new LuzDireccional({0.0,30.0},GL_LIGHT1,{1.0,1.0,1.0,1.0},{0.0,0.0,0.0,0.0},{1.0,1.0,1.0,0.0}) ;
+    luzdir = new LuzDireccional({0.0,30.0},GL_LIGHT1,{1.0,1.0,1.0,0.0},{0.0,0.0,0.0,0.0},{1.0,1.0,1.0,0.0}) ;
     luzpos = new LuzPosicional({30.0,0.0,0.0},GL_LIGHT2,{1.0,1.0,1.0,1.0},{1.0,1.0,1.0,1.0},{1.0,1.0,1.0,1.0}) ;
     modoDib = false ;
     modo = 2;

@@ -215,10 +215,6 @@ void Malla3D::calcular_normales(){
       *material = *mat ;
    }
 
-   void Malla3D::setColorSolido(Tupla3f color){
-      color_solido = color ;
-   }
-
    void Malla3D::drawIluminacion(bool modoDibujado){
 
       calcular_normales() ;
