@@ -31,6 +31,7 @@ Escena::Escena()
     peondif = new ObjRevolucion("plys/peon.ply",20,true,true) ;
     cono = new Cono(1, 20, 70, 40) ;
     esfera = new Esfera(50,50,40) ;
+    ganso = new Ganso() ;
     luzdir = new LuzDireccional({0.0,30.0},GL_LIGHT1,{1.0,1.0,1.0,1.0},{0.0,0.0,0.0,0.0},{1.0,1.0,1.0,0.0}) ;
     luzpos = new LuzPosicional({30.0,0.0,0.0},GL_LIGHT2,{1.0,1.0,1.0,1.0},{1.0,1.0,1.0,1.0},{1.0,1.0,1.0,1.0}) ;
     modoDib = false ;
@@ -111,7 +112,7 @@ void Escena::dibujar()
          else luzpos->desactivar() ;
       glPopMatrix() ;
 
-      glPushMatrix();
+      /*glPushMatrix();
          glTranslatef(0,0,-100);
          glTranslatef(0,10,0);
          esfera->draw(modo, modoDib) ;
@@ -153,7 +154,12 @@ void Escena::dibujar()
          glTranslatef(-100,10,-100);
          glScalef(30,30,30);
          peondif->draw(modo, modoDib) ;
-      glPopMatrix();
+      glPopMatrix();*/
+
+
+      glPushMatrix() ;
+         ganso->draw(modo, modoDib) ;
+      glPopMatrix() ;
 
       glDisable(GL_NORMALIZE) ;
       modo =-4 ;
@@ -276,10 +282,17 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             }
          break;
          case 'I':
-           
             cout << "Activado/desactivado : Iluminacion" << endl ;
             subVisual=ILUMINACION;
          break;
+         case 'V' :
+            cout << "Activado/desactivado : Animacion Manual"  <<endl ;
+            subVisual = JERARQUICOMAN ;
+         break ;
+         case 'J' :
+            cout << "Activado/desactivado : Modificacion de Animacion Automática"  <<endl ;
+            subVisual = JERARQUICOAUTO ;
+         break ;
       }
 
       if (subVisual == ILUMINACION){
@@ -287,7 +300,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             case '0':
                teclamodo = false ;
                subIlum = LUZ0 ;
-               cout << "Activado/desactivado : Luz Direccional" << teclaluz << endl ;
+               cout << "Activado/desactivado : Luz Direccional"  << endl ;
                luces[0] = !luces[0] ;
             break ;
             case '1':
@@ -333,6 +346,72 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          }
       }
    }
+
+   if (subVisual == JERARQUICOMAN)
+   {
+      switch(toupper(tecla)){
+         case '+' :
+            if (grados_libertad[0]) ganso -> caerPetalo(10,-10) ;
+            if (grados_libertad[1]) ganso -> rotarPiernaDerecha(-2) ;
+            if (grados_libertad[2]) ganso -> rotarPiernaIzquierda(2) ;
+            if (grados_libertad[3]) ganso -> rotarCabeza(2,0,0) ;
+            if (grados_libertad[4]) ganso -> rotarCabeza(0,2,0) ;
+            if (grados_libertad[5]) ganso -> rotarCabeza(0,0,2) ;
+            if (grados_libertad[6]) ganso -> rotarCuello(2,0) ;
+            if (grados_libertad[7]) ganso -> rotarCuello(0,2) ;
+         break ;
+         case '-' :
+            if (grados_libertad[0]) ganso -> caerPetalo(-10,10) ;
+            if (grados_libertad[1]) ganso -> rotarPiernaDerecha(2) ;
+            if (grados_libertad[2]) ganso -> rotarPiernaIzquierda(-2) ;
+            if (grados_libertad[3]) ganso -> rotarCabeza(-2,0,0) ;
+            if (grados_libertad[4]) ganso -> rotarCabeza(0,-2,0) ;
+            if (grados_libertad[5]) ganso -> rotarCabeza(0,0,-2) ;
+            if (grados_libertad[6]) ganso -> rotarCuello(-2,0) ;
+            if (grados_libertad[7]) ganso -> rotarCuello(0,-2) ;
+         break ;
+         case '0' :/*PetaloXY*/
+            grados_libertad[0] = !grados_libertad[0] ;
+         break ;
+         case '1' :/*Alfa*/
+            grados_libertad[1] = !grados_libertad[1] ;
+         break ;
+         case '2' :/*Omega*/
+            grados_libertad[2] = !grados_libertad[2] ;
+         break ;
+         case '3' :/*Beta*/
+            grados_libertad[3] = !grados_libertad[3] ;
+         break ;
+         case '4' :/*Gamma*/
+            grados_libertad[4] = !grados_libertad[4] ;
+         break ;
+         case '5' :/*Delta*/
+            grados_libertad[5] = !grados_libertad[5] ;
+         break ;
+         case '6' :/*Epsilon*/
+            grados_libertad[6] = !grados_libertad[6] ;
+         break ;
+         case '7' :/*Chi*/
+            grados_libertad[7] = !grados_libertad[7] ;
+         break ;
+      }
+   }
+
+   if (subVisual == JERARQUICOAUTO)
+   {
+      switch(toupper(tecla)){
+         case '+' :
+            animacion += 0.1 ;
+         break ;
+         case '-' :
+            animacion -= 0.1 ;
+         break ;
+      }
+   }
+   
+   
+
+
 
    glutPostRedisplay();
    return salir;
@@ -406,4 +485,12 @@ void Escena::change_observer()
    glTranslatef( 0.0, 0.0, -Observer_distance );
    glRotatef( Observer_angle_y, 0.0 ,1.0, 0.0 );
    glRotatef( Observer_angle_x, 1.0, 0.0, 0.0 );
+}
+
+void Escena::animarModeloJerarquico(){
+   ganso -> caerPetalo(animacion,-animacion) ;
+   ganso -> rotarPiernaDerecha(-animacion) ;
+   ganso -> rotarPiernaIzquierda(animacion) ;
+   ganso -> rotarCabeza(animacion,animacion,animacion) ;
+   ganso -> rotarCuello(animacion,animacion) ;   
 }

@@ -10,13 +10,14 @@
 #include "cono.h"
 #include "cilindro.h"
 #include "esfera.h"
+#include "jerarquico.h"
 #include "luz.h"
 #include "luzdireccional.h"
 #include "luzposicional.h"
 #include "aux.h"
 #include "materiales.h"
 
-typedef enum {OUTV, PUNTOS, LINEAS, COLOR, AJEDREZ, ILUMINACION} submenu_visual ;
+typedef enum {OUTV, PUNTOS, LINEAS, COLOR, AJEDREZ, ILUMINACION, JERARQUICOMAN, JERARQUICOAUTO} submenu_visual ;
 typedef enum {OFF,LUZ0,LUZ1} submenu_iluminacion ;
 typedef enum {OUTO, TETRAEDRO, CUBO, PLY} submenu_objeto ;
 typedef enum {OUTD, INMEDIATO, DIFERIDO, PLANO, SUAVE} submenu_dibujo ;
@@ -63,15 +64,18 @@ class Escena
    Cono * cono = nullptr ;
    Cilindro * cilindro = nullptr ;
    Esfera * esfera = nullptr ;
+   Ganso * ganso = nullptr ;
    Luz * luz = nullptr ;
    LuzDireccional * luzdir = nullptr ;
    LuzPosicional * luzpos = nullptr ;
 
    int veces_sup = 0, veces_inf = 0 ;
+   float animacion = 1.0 ;
    bool angulo = false ;
    bool teclamodo = false ;
-   bool teclaluz = false ;
+   bool orientacion = false ;
    std::vector<bool> luces = {false,false} ;
+   std::vector<bool> grados_libertad = {false,false,false,false,false,false,false,false} ;
 
 
    
@@ -92,6 +96,9 @@ class Escena
 	// Interacción con la escena
 	bool teclaPulsada( unsigned char Tecla1, int x, int y ) ;
 	void teclaEspecial( int Tecla1, int x, int y );
+
+    //Practica 4- Animacion automatica
+    void animarModeloJerarquico() ;
 
 };
 #endif

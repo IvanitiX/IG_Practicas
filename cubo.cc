@@ -44,6 +44,6 @@ Cubo::Cubo(float lado)
    color_impar_ajedrez = {1,0.25,1} ;
    color_par_ajedrez = {0,0,0} ;
 
-   material = new Material({0.0,0.3,0.0,1.0}, {0.0,0.5,0.0,1.0}, {0.0,0.7,0.0,1.0}, 100.0) ;
+   material = new MaterialVerde() ;
 }
 

@@ -42,3 +42,35 @@ class MaterialMagenta : public Material{
             MaterialUltraEspecular() ;
     } ;
 #endif
+
+#ifndef NARANJA
+#define NARANJA
+    class MaterialNaranja : public Material{
+        public:
+            MaterialNaranja() ;
+    } ;
+#endif
+
+#ifndef NEGRO
+#define NEGRO
+    class MaterialNegro : public Material{
+        public:
+            MaterialNegro() ;
+    } ;
+#endif
+
+#ifndef BLANCO
+#define BLANCO
+    class MaterialBlanco : public Material{
+        public:
+            MaterialBlanco() ;
+    } ;
+#endif
+
+#ifndef VERDE
+#define VERDE
+    class MaterialVerde : public Material{
+        public:
+            MaterialVerde() ;
+    } ;
+#endif

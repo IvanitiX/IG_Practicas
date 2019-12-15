@@ -162,4 +162,3 @@ void ObjRevolucion::detectarTapas(std::vector<Tupla3f> perfil){
 void ObjRevolucion::modificarTapas(bool tapa_sup, bool tapa_inf){  
    crearMalla(perfil_asociado,instancias,tapa_sup,tapa_inf) ;
 }
-

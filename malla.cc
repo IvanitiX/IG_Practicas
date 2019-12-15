@@ -216,7 +216,9 @@ void Malla3D::calcular_normales(){
    }
 
    void Malla3D::setColorSolido(Tupla3f color){
-      color_solido = color ;
+      colores_solido.clear() ;
+      for (int i = 0 ; i < v.size() ; i++)
+         colores_solido.push_back(color) ;
    }
 
    void Malla3D::drawIluminacion(bool modoDibujado){

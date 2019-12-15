@@ -41,6 +41,7 @@ class Malla3D
    void draw(int, bool) ;
 
    void setMaterial (Material * mat) ;
+   void setColorSolido(Tupla3f color) ;
 
    
 
