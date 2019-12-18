@@ -11,11 +11,9 @@ Cono::Cono(const int num_vert_perfil,const int num_instancias_perf, const float 
   std::vector<Tupla3f> perfilAlt = ObjRevolucion::formatoPerfil(perfil) ;
   ObjRevolucion::crearMalla(perfilAlt, num_instancias_perf, true, true) ;
 
-  for(unsigned i = 0 ; i < v.size() ; i++){
-    colores_solido.push_back({0,0.2,1}) ;
-    colores_puntos.push_back({0.5,0.5,0}) ;
-    colores_linea.push_back({0,0,0}) ;
-  }
+  solido = {0,0.2,1} ;
+  linea = {0.5,0.5,0} ;
+  puntos = {0,0,0} ;
 
   color_impar_ajedrez = {0,0.2,1} ;
   color_par_ajedrez = {0,0,0} ;

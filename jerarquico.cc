@@ -46,6 +46,8 @@ Pierna::Pierna(){
 Cuerpo::Cuerpo(){
     rotacionAlfa = 0 ;
     rotacionOmega = 0 ;
+    alfa = false ;
+    omega = false ;
     cuerCentro = new Esfera(20,20,20.0) ;
     cuerCentro -> setColorSolido({0.95,0.95,0.95}) ;
     cuerCentro -> setMaterial(new MaterialBlanco()) ;
@@ -76,141 +78,145 @@ Cuello::Cuello(){
     rotacionDelta = 0 ;
     rotacionEpsilon = 0 ;
     rotacionChi = 0 ;
+    delta = false ;
+    epsilon = false ;
+    chi = false ;
     cueCabeza = new Cabeza() ;
     cueCentro = new Cilindro(1,20,30.0,20.0) ;
     cueCentro -> setColorSolido({0.95,0.95,0.95}) ;
     cueCentro -> setMaterial(new MaterialBlanco()) ;
-    cueRotacion = new Esfera(20,20,20.0) ;
 }
 
 Ganso::Ganso(){
     rotacionBeta = 0 ;
     rotacionGamma = 0 ;
+    beta = false ;
+    gamma = false ;
     ganCuello = new Cuello() ;
     ganCuerpo = new Cuerpo() ;
 }
 
 /*Funciones de dibujado*/
-void Petalo::draw(int modo, bool modoDib){
+void Petalo::draw(int modoDib, std::vector<bool>  modos){
     glPushMatrix() ;
         glTranslatef(-30,30,0) ;
         glRotatef(45,0,0,1) ;
         glScalef(0.2,2,1) ;
-        petEsfera -> draw(modo, modoDib) ;
+        petEsfera -> draw(modoDib, modos) ;
     glPopMatrix() ;
 }
-void Tulipa::draw(int modo, bool modoDib){
+void Tulipa::draw(int modoDib, std::vector<bool>  modos){
     glPushMatrix() ;
         glPushMatrix() ;
-            tulPetaloAbajo -> draw(modo, modoDib) ;
+            tulPetaloAbajo -> draw(modoDib, modos) ;
         glPopMatrix() ;
             glRotatef(90.0,0,1,0) ;
-            tulPetaloDer -> draw(modo, modoDib) ;
+            tulPetaloDer -> draw(modoDib, modos) ;
         glPushMatrix() ;
             glRotatef(180.0,0,1,0) ;
-            tulPetaloArriba -> draw(modo, modoDib) ;
+            tulPetaloArriba -> draw(modoDib, modos) ;
         glPopMatrix() ;
         glPushMatrix() ;
             glTranslatef(-caidaPetaloX,-caidaPetaloY,0) ;
             glRotatef(100.0,0,1,0) ;
-            tulPetaloIzq -> draw(modo, modoDib) ;
+            tulPetaloIzq -> draw(modoDib, modos) ;
         glPopMatrix() ;
         glPushMatrix() ;
             glTranslatef(0,30,0) ;
             glScalef(1.0,1.0,1.0) ;
-            tulCentro -> draw(modo, modoDib) ;
+            tulCentro -> draw(modoDib, modos) ;
         glPopMatrix() ;
     glPopMatrix() ;
 }
 
-void Flor::draw(int modo, bool modoDib){
+void Flor::draw(int modoDib, std::vector<bool>  modos){
     glPushMatrix() ;
         glPushMatrix() ;
             glTranslatef(20,-20,0) ;
             glScalef(2.0,1.0,0.3) ;
-            florHoja -> draw(modo, modoDib) ;
+            florHoja -> draw(modoDib, modos) ;
         glPopMatrix() ;
         glPushMatrix() ;
             glTranslatef(0,-100,0) ;
             glScalef(0.4,4.0,0.4) ;
-            florTallo -> draw(modo, modoDib) ;
+            florTallo -> draw(modoDib, modos) ;
         glPopMatrix() ;
         glPushMatrix() ;
-            florTulipa -> draw(modo, modoDib) ;
+            florTulipa -> draw(modoDib, modos) ;
         glPopMatrix() ;
     glPopMatrix() ;
 }
 
-void Pierna::draw(int modo, bool modoDib){
+void Pierna::draw(int modoDib, std::vector<bool>  modos){
     glPushMatrix() ;
         glTranslatef(0,-100,0) ;
         glPushMatrix() ;
             glTranslatef(10,0,0) ;
             glScalef(4,0.6,2) ;
-            piePlanta -> draw(modo, modoDib) ;
+            piePlanta -> draw(modoDib, modos) ;
         glPopMatrix () ;
         glPushMatrix() ;
             glTranslatef(0,5,0) ;
             glScalef(0.4,2,0.4) ;
-            pieCilindro -> draw(modo, modoDib) ;
+            pieCilindro -> draw(modoDib, modos) ;
         glPopMatrix () ;
         glPushMatrix() ;
             glTranslatef(0,90,0) ;
             glScalef(1.5,2,1.3) ;
-            pieEsfera -> draw(modo, modoDib) ;
+            pieEsfera -> draw(modoDib, modos) ;
         glPopMatrix () ;
     glPopMatrix() ;
 }
 
-void Cuerpo::draw(int modo, bool modoDib){
+void Cuerpo::draw(int modoDib, std::vector<bool>  modos){
     glPushMatrix() ;
         glPushMatrix() ;
             glTranslatef(0,-30,-60) ;
             glRotatef(rotacionAlfa,0,0,1) ;
-            cuerPieDer -> draw(modo, modoDib) ;
+            cuerPieDer -> draw(modoDib, modos) ;
         glPopMatrix() ;
         glPushMatrix() ;
             glTranslatef(0,-30,60) ;
             glRotatef(rotacionOmega,0,0,1) ;
-            cuerPieIzq -> draw(modo, modoDib) ;
+            cuerPieIzq -> draw(modoDib, modos) ;
         glPopMatrix() ;
         glPushMatrix() ;
             glRotatef(3,0,0,1) ;
             glScalef(6,4,4) ;
-            cuerCentro -> draw(modo, modoDib) ;
+            cuerCentro -> draw(modoDib, modos) ;
         glPopMatrix() ;
         glPushMatrix() ;
             glTranslatef(-95,0,0) ;
             glRotatef(90,0,0,1) ;
             glScalef(2.3,2.3,2.3) ;
-            cuerCola -> draw(modo, modoDib) ;
+            cuerCola -> draw(modoDib, modos) ;
         glPopMatrix() ;
     glPopMatrix() ;
 }
 
-void Cabeza::draw(int modo, bool modoDib){
+void Cabeza::draw(int modoDib, std::vector<bool>  modos){
     glPushMatrix() ;
         glTranslatef(40,0,0) ;
         glPushMatrix() ;
             glScalef(3.0,2.0,2.0) ;
-            cabCentro -> draw(modo, modoDib) ;
+            cabCentro -> draw(modoDib, modos) ;
         glPopMatrix() ;
         glPushMatrix() ;
             glTranslatef(25,20,30) ;
             glScalef(0.4,0.4,0.4) ;
-            cabOjoDer -> draw(modo, modoDib) ;
+            cabOjoDer -> draw(modoDib, modos) ;
         glPopMatrix() ;
         glPushMatrix() ;
             glTranslatef(25,20,-30) ;
             glScalef(0.4,0.4,0.4) ;
-            cabOjoIzq -> draw(modo, modoDib) ;
+            cabOjoIzq -> draw(modoDib, modos) ;
         glPopMatrix() ;
         glPushMatrix() ;
             glTranslatef(60,0,0) ;
             glRotatef(-90,1,0,0) ;
             glRotatef(-90.0,0,0,1) ;
             glScalef(4,4,4) ;
-            cabPico -> draw(modo, modoDib) ;
+            cabPico -> draw(modoDib, modos) ;
         glPopMatrix() ;
         glPushMatrix() ;
             glTranslatef(60,-3,-35) ;
@@ -218,24 +224,19 @@ void Cabeza::draw(int modo, bool modoDib){
             glRotatef(-90,0,1,0) ;
             glRotatef(90.0,0,0,1) ;
             glScalef(0.6,0.6,0.6) ;
-            cabFlor -> draw(modo, modoDib) ;
+            cabFlor -> draw(modoDib, modos) ;
         glPopMatrix() ;
     glPopMatrix() ;
 }
 
-void Cuello::draw(int modo, bool modoDib){
+void Cuello::draw(int modoDib, std::vector<bool>  modos){
     glPushMatrix() ;
         glPushMatrix() ;
-            glPushMatrix() ;
-                glScalef(1.2,1.2,1.2) ;
-                cueRotacion -> draw(modo, modoDib) ;
-            glPopMatrix() ;
-
             glPushMatrix() ;
                 glRotatef(-40,0,0,1) ;
                 glTranslatef(0,20,0) ;
                 glScalef(0.8,5,0.8) ;
-                cueCentro -> draw(modo, modoDib) ;
+                cueCentro -> draw(modoDib, modos) ;
             glPopMatrix() ;
         glPopMatrix() ;
 
@@ -245,22 +246,22 @@ void Cuello::draw(int modo, bool modoDib){
             glRotatef(rotacionDelta,1,0,0) ;
             glRotatef(rotacionEpsilon,0,1,0) ;
             glRotatef(rotacionChi,0,0,1) ;
-            cueCabeza -> draw(modo, modoDib) ;
+            cueCabeza -> draw(modoDib, modos) ;
         glPopMatrix() ;
     glPopMatrix() ;
 }
 
-void Ganso::draw(int modo, bool modoDib){
+void Ganso::draw(int modoDib, std::vector<bool>  modos){
     glPushMatrix() ;
         glPushMatrix() ;
             glTranslatef(90,30,0) ;
             glRotatef(rotacionBeta,1,0,0) ;
             glRotatef(rotacionGamma,0,0,1) ;
-            ganCuello -> draw(modo, modoDib) ;
+            ganCuello -> draw(modoDib, modos) ;
         glPopMatrix() ;
         glPushMatrix() ;
             glScalef(1.1,1.1,1.1) ;
-            ganCuerpo -> draw(modo, modoDib) ;
+            ganCuerpo -> draw(modoDib, modos) ;
         glPopMatrix() ;
     glPopMatrix() ;
 }
@@ -277,19 +278,36 @@ void Tulipa::caerPetalo(float incremento_x, float incremento_y){
 }
 
 void Cuerpo::rotarPiernaDerecha(float incremento_z){
-    rotacionAlfa += incremento_z ; 
+    if (rotacionAlfa >= 40){rotacionAlfa = rotacionAlfa - incremento_z ; alfa = false ;}
+    else if (rotacionAlfa <= -40) {rotacionAlfa = rotacionAlfa + incremento_z ; alfa = true ;}
+    alfa ? rotacionAlfa = rotacionAlfa + incremento_z : rotacionAlfa = rotacionAlfa - incremento_z;
 }
 void Cuerpo::rotarPiernaIzquierda(float incremento_z){
-    rotacionOmega += incremento_z ;
+    if (rotacionOmega >= 40){rotacionOmega = rotacionOmega - incremento_z ; omega = true ;}
+    else if (rotacionOmega <= -40) {rotacionOmega = rotacionOmega + incremento_z ; omega = false ;}
+    omega ? rotacionOmega = rotacionOmega - incremento_z : rotacionOmega = rotacionOmega + incremento_z;
 }
 void Cuello::rotarCabeza(float incremento_x, float incremento_y, float incremento_z){
-    rotacionDelta += incremento_x ;
-    rotacionEpsilon += incremento_y ;
-    rotacionChi += incremento_z ;
+    if (rotacionDelta >= 40){rotacionDelta = rotacionDelta - incremento_x ; delta = false ;}
+    else if (rotacionDelta <= -40) {rotacionDelta = rotacionDelta + incremento_x ; delta = true ;}
+    delta ? rotacionDelta = rotacionDelta + incremento_x : rotacionDelta = rotacionDelta - incremento_x;
+
+    if (rotacionEpsilon >= 40){rotacionEpsilon = rotacionEpsilon - incremento_y ; epsilon = false ;}
+    else if (rotacionEpsilon <= -40) {rotacionEpsilon = rotacionEpsilon + incremento_y ; epsilon = true ;}
+    epsilon ? rotacionEpsilon = rotacionEpsilon + incremento_y : rotacionEpsilon = rotacionEpsilon - incremento_y;
+
+    if (rotacionChi >= 40){rotacionChi = rotacionChi - incremento_z ; chi = false ;}
+    else if (rotacionChi <= -40) {rotacionChi = rotacionChi + incremento_z ; chi = true ;}
+    chi ? rotacionChi = rotacionChi + incremento_z : rotacionChi = rotacionChi - incremento_z;
 }
 void Ganso::rotarCuello(float incremento_x , float incremento_z){
-    rotacionBeta += incremento_x ;
-    rotacionGamma += incremento_z ;
+    if (rotacionBeta >= 20){rotacionBeta = rotacionBeta - incremento_x ; beta = false ;}
+    else if (rotacionBeta <= -20) {rotacionBeta = rotacionBeta + incremento_x ; beta = true ;}
+    beta ? rotacionBeta = rotacionBeta + incremento_x : rotacionBeta = rotacionBeta - incremento_x;
+
+    if (rotacionGamma >= 20){rotacionGamma = rotacionGamma - incremento_z ; gamma = false ;}
+    else if (rotacionGamma <= -20) {rotacionGamma = rotacionGamma + incremento_z ; gamma = true ;}
+    gamma ? rotacionGamma = rotacionGamma + incremento_z : rotacionGamma = rotacionGamma - incremento_z;
 }
 
 /*Funciones de redireccion a estos primeros*/

@@ -10,7 +10,7 @@
 class Petalo: public Malla3D{
     public:
         Petalo() ;
-        void draw(int modo, bool modoDib) ;
+        void draw(int modoDib, std::vector<bool>  modos) ;
         void setColorPetalo(Tupla3f color) ;
     protected:
         Esfera * petEsfera = nullptr ;
@@ -19,7 +19,7 @@ class Petalo: public Malla3D{
 class Tulipa: public Malla3D{
     public:
         Tulipa() ;
-        void draw(int modo, bool modoDib) ;
+        void draw(int modoDib, std::vector<bool>  modos) ;
         void caerPetalo(float incremento_x, float incremento_y) ;
     protected:
         Petalo * tulPetaloAbajo = nullptr ;
@@ -34,7 +34,7 @@ class Tulipa: public Malla3D{
 class Flor: public Malla3D{
     public:
         Flor() ;
-        void draw(int modo, bool modoDib) ;
+        void draw(int modoDib, std::vector<bool>  modos) ;
         void caerPetalo(float incremento_x, float incremento_y) ;
     protected:
         Tulipa * florTulipa = nullptr ;
@@ -47,7 +47,7 @@ class Flor: public Malla3D{
 class Pierna: public Malla3D{
     public:
         Pierna() ;
-        void draw(int modo, bool modoDib) ;
+        void draw(int modoDib, std::vector<bool>  modos) ;
     protected:
         Cubo * piePlanta = nullptr ;
         Cilindro * pieCilindro = nullptr ;
@@ -57,7 +57,7 @@ class Pierna: public Malla3D{
 class Cuerpo: public Malla3D{
     public:
         Cuerpo();
-        void draw(int modo, bool modoDib) ;
+        void draw(int modoDib, std::vector<bool>  modos) ;
         void rotarPiernaDerecha(float incremento_z) ;
         void rotarPiernaIzquierda(float incremento_z) ;
     protected:
@@ -67,12 +67,13 @@ class Cuerpo: public Malla3D{
         Cono * cuerCola = nullptr ;
 
         float rotacionAlfa, rotacionOmega ;
+        bool alfa, omega ;
 };
 
 class Cabeza: public Malla3D{
     public:
         Cabeza() ;
-        void draw(int modo, bool modoDib) ;
+        void draw(int modoDib, std::vector<bool>  modos) ;
         void caerPetalo(float incremento_x, float incremento_y) ;
         
     protected:
@@ -86,21 +87,21 @@ class Cabeza: public Malla3D{
 class Cuello: public Malla3D{
     public:
         Cuello() ;
-        void draw(int modo, bool modoDib) ;
+        void draw(int modoDib, std::vector<bool>  modos) ;
         void caerPetalo(float incremento_x, float incremento_y) ;
         void rotarCabeza(float incremento_x, float incremento_y, float incremento_z) ;
     protected:
         Cabeza * cueCabeza = nullptr ;
-        Esfera * cueRotacion = nullptr ; //Usado para fines de debug
         Cilindro * cueCentro = nullptr ;
 
         float rotacionDelta, rotacionEpsilon, rotacionChi ;
+        bool delta, epsilon, chi ;
 };
 
 class Ganso: public Malla3D{
     public:
         Ganso() ;
-        void draw(int modo, bool modoDib) ;
+        void draw(int modoDib, std::vector<bool>  modos) ;
         void rotarCuello(float incremento_x , float incremento_y) ;
         void rotarCabeza(float incremento_x, float incremento_y, float incremento_z) ;
         void caerPetalo(float incremento_x, float incremento_y) ;
@@ -111,4 +112,5 @@ class Ganso: public Malla3D{
         Cuello * ganCuello = nullptr ;
 
         float rotacionBeta, rotacionGamma ;
+        bool beta, gamma ;
 } ;

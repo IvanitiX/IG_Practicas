@@ -14,11 +14,10 @@ Esfera::Esfera(const int num_vert_perfil,const int num_instancias_perf,const flo
   std::vector<Tupla3f> perfilAlt = ObjRevolucion::formatoPerfil(perfil) ;
   ObjRevolucion::crearMalla(perfilAlt, num_instancias_perf,true,true) ;
 
-  for(unsigned i = 0 ; i < v.size() ; i++){
-    colores_solido.push_back({0,0.82,0.5}) ;
-    colores_puntos.push_back({0.5,0.5,0}) ;
-    colores_linea.push_back({0,0,0}) ;
-  }
+  solido = {0,0.82,0.5} ;
+  linea = {0.5,0.5,0} ;
+  puntos = {0,0,0} ;
+
   color_impar_ajedrez = {0,0.82,0.5} ;
   color_par_ajedrez = {0,0,0} ;
 

@@ -23,22 +23,18 @@
 class Malla3D
 {
    public:
-   void drawLineas(bool);
-   void drawSolido(bool);
-   void drawPuntos(bool);
-   void drawAjedrez(bool) ;
-   void drawIluminacion(bool) ;
+   void drawAjedrez() ;
 
    // dibuja el objeto en modo inmediato
-   void draw_ModoInmediato();
+   void draw_ModoInmediato(std::vector<bool> modos);
 
    // dibuja el objeto en modo diferido (usando VBOs)
-   void draw_ModoDiferido();
+   void draw_ModoDiferido(std::vector<bool> modos);
 
    // función que redibuja el objeto
    // está función llama a 'draw_ModoInmediato' (modo inmediato)
    // o bien a 'draw_ModoDiferido' (modo diferido, VBOs)
-   void draw(int, bool) ;
+   void draw(int, std::vector<bool>) ;
 
    void setMaterial (Material * mat) ;
    void setColorSolido(Tupla3f color) ;
@@ -51,15 +47,16 @@ class Malla3D
 
    std::vector<Tupla3f> v ;   // tabla de coordenadas de vértices (una tupla por vértice, con tres floats)
    std::vector<Tupla3i> f ; // una terna de 3 enteros por cada cara o triángulo
+   Tupla3f puntos, linea, solido ;
    std::vector<Tupla3f> colores_solido, colores_linea, colores_puntos ;
-   std::vector<Tupla3f> normales ;
+   std::vector<Tupla3f> colores, normales ;
    Tupla3f color_par_ajedrez, color_impar_ajedrez;
    Material * material = nullptr;
 
 
    GLuint CrearVBO(GLuint, GLuint, GLvoid*) ;
 
-   GLuint id_vbo_ver = 0 , id_vbo_tri = 0 ;
+   GLuint id_vbo_ver = 0 , id_vbo_tri = 0, id_vbo_normales = 0 , id_vbo_color_solido = 0 ,id_vbo_color_puntos = 0 ,id_vbo_color_lineas = 0 ;
 
    std::vector<bool> modos = {false,false,false,false,false} ;
    int ultimoModo = -1 ;

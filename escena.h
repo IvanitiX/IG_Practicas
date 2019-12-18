@@ -55,7 +55,7 @@ class Escena
    Tetraedro * tetraedro= nullptr ; // es importante inicializarlo a 'nullptr'
    Malla3D * malla= nullptr;
    Malla3D * malla2 = nullptr ;
-   bool modoDib; //Ve qué modo de dibujado hace
+   int modoDib; //Ve qué modo de dibujado hace
    int modo ;
    ObjPLY * ply = nullptr ;
    ObjPLY * ply2 = nullptr ;
@@ -74,6 +74,8 @@ class Escena
    bool angulo = false ;
    bool teclamodo = false ;
    bool orientacion = false ;
+   bool shaders = true ;
+   std::vector<bool> modos = {false,false,false,false,false} ;
    std::vector<bool> luces = {false,false} ;
    std::vector<bool> grados_libertad = {false,false,false,false,false,false,false,false} ;
 

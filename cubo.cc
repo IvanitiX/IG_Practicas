@@ -35,11 +35,9 @@ Cubo::Cubo(float lado)
                   { 3, 7, 2 }, { 2, 7, 6 }
                 } ;
 
-   for (unsigned i = 0 ; i < v.size() ; i++){
-      colores_solido.push_back({1,0,0}) ;
-      colores_linea.push_back({0,1,0}) ;
-      colores_puntos.push_back({0,0,1}) ;
-   }
+   solido = {1,0,0} ;
+   linea = {0,1,0} ;
+   puntos = {0,0,1} ;
 
    color_impar_ajedrez = {1,0.25,1} ;
    color_par_ajedrez = {0,0,0} ;

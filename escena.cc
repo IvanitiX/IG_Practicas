@@ -36,6 +36,7 @@ Escena::Escena()
     luzpos = new LuzPosicional({30.0,0.0,0.0},GL_LIGHT2,{1.0,1.0,1.0,1.0},{1.0,1.0,1.0,1.0},{1.0,1.0,1.0,1.0}) ;
     modoDib = false ;
     modo = 2;
+    modoDib = 1 ;
 }
 
 //**************************************************************************
@@ -76,25 +77,31 @@ void Escena::dibujar()
    glEnableClientState(GL_COLOR_ARRAY) ;
     ejes.draw();
 
+    shaders ? glShadeModel(GL_SMOOTH) : glShadeModel(GL_FLAT) ;
+
     switch(subDibujo){
-      if (glIsEnabled(GL_LIGHTING)){
-         case SUAVE : modoDib = true ; break ;
-         case PLANO : modoDib = false ; break ;
+          case INMEDIATO: modoDib = 1 ; break ;
+          case DIFERIDO : modoDib = 2; break ;
        }
-       else{
-          case INMEDIATO: modoDib = true ; break ;
-          case DIFERIDO : modoDib = false; break ;
-       }
-    }
 
   switch(subVisual){
          
-         case PUNTOS: modo = 0 ; subVisual = OUTV ; break;
-         case LINEAS: modo = 1 ; subVisual = OUTV ; break;
-         case COLOR: modo = 2; subVisual = OUTV ; break;
-         case AJEDREZ: modo = 3; subVisual = OUTV ;  break;
-         case ILUMINACION: modo = 4 ; break;
+         case PUNTOS: modo = 0 ; modos[0] = !modos[0] ; subVisual = OUTV ; break;
+         case LINEAS: modo = 1 ; modos[1] = !modos[1] ; subVisual = OUTV ; break;
+         case COLOR: modo = 2; modos[2] = !modos[2] ; subVisual = OUTV ; break;
+         case AJEDREZ: modo = 3; modos[3] = !modos[3] ; subVisual = OUTV ;  break;
+         case ILUMINACION: 
+            modo = 4 ; 
+            modos[4] = !modos[4] ; 
+            if(modos[4]){
+               for (int i = 0 ; i < 4 ; i++)
+                  modos[i] = false ;
+            }
+            subVisual = OUTV ;  
+            break;
     }
+
+    if(modos[4]) glEnable(GL_LIGHTING) ;
 
       if (!teclamodo) modo = -4 ;
       glEnable (GL_NORMALIZE) ;
@@ -112,57 +119,68 @@ void Escena::dibujar()
          else luzpos->desactivar() ;
       glPopMatrix() ;
 
-      /*glPushMatrix();
+      glPushMatrix();
          glTranslatef(0,0,-100);
-         glTranslatef(0,10,0);
-         esfera->draw(modo, modoDib) ;
+         glTranslatef(0,-35,0);
+         glScalef (0.6,0.6,0.6) ;
+         esfera->draw(modoDib,modos) ;
       glPopMatrix();
 
       glPushMatrix();
          glTranslatef(0,0,100);
-         glTranslatef(0,10,0);
-         tetraedro->draw(modo, modoDib) ;
+         glTranslatef(0,-45,0);
+         glScalef (0.6,0.6,0.6) ;
+         tetraedro->draw(modoDib,modos) ;
       glPopMatrix();
 
       glPushMatrix();
          glTranslatef(-100,0,0);
-         cubo->draw(modo, modoDib) ;
+         glTranslatef(0,-25,0);
+         glScalef (0.6,0.6,0.6) ;
+         cubo->draw(modoDib, modos) ;
       glPopMatrix();
 
       glPushMatrix();
          glTranslatef(100,0,0);
-         cono->draw(modo, modoDib) ;
+         glTranslatef(0,-45,0);
+         glScalef (0.6,0.6,0.6) ;
+         cono->draw(modoDib,modos) ;
       glPopMatrix();
 
       glPushMatrix();
-         glTranslatef(0,10,0);
-         cilindro->draw(modo, modoDib) ;
+         glTranslatef(0,-70,0);
+         glScalef (5,0.2,5) ;
+         cilindro->draw(modoDib,modos) ;
       glPopMatrix();
 
       glPushMatrix();
          glTranslatef(100,10,-100);
-         ply->draw(modo, modoDib) ;
+         glTranslatef(0,-45,0);
+         glScalef (0.6,0.6,0.6) ;
+         ply->draw(modoDib,modos) ;
       glPopMatrix();
 
       glPushMatrix();
          glTranslatef(-100,10,100);
-         glScalef(30,30,30);
-         peonesp->draw(modo, modoDib) ;
+         glTranslatef(0,-45,0);
+         glScalef (10,10,10) ;
+         peonesp->draw(modoDib,modos) ;
       glPopMatrix();
 
       glPushMatrix();
          glTranslatef(-100,10,-100);
-         glScalef(30,30,30);
-         peondif->draw(modo, modoDib) ;
-      glPopMatrix();*/
+         glTranslatef(0,-45,0);
+         glScalef (10,10,10) ;
+         peondif->draw(modoDib,modos) ;
+      glPopMatrix();
 
 
       glPushMatrix() ;
-         ganso->draw(modo, modoDib) ;
+         glScalef(0.3,0.3,0.3) ;
+         ganso->draw(modoDib,modos) ;
       glPopMatrix() ;
 
       glDisable(GL_NORMALIZE) ;
-      modo =-4 ;
     
     
     // COMPLETAR
@@ -262,17 +280,14 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
       switch (toupper(tecla)){
          case 'P':
             cout << "Activado/desactivado : modo puntos" << endl ;
-            glPolygonMode(GL_FRONT_AND_BACK,GL_POINT); 
             subVisual=PUNTOS ;
          break;
          case 'L':
             cout << "Activado/desactivado : modo líneas" << endl ;
-            glPolygonMode(GL_FRONT_AND_BACK,GL_LINE); 
             subVisual=LINEAS ;
          break;
          case 'S':
-            cout << "Activado/desactivado : modo sólido" << endl ;
-            glPolygonMode(GL_FRONT_AND_BACK,GL_FILL); 
+            cout << "Activado/desactivado : modo sólido" << endl ; 
             subVisual=COLOR ;
          break;
          case 'A':
@@ -295,7 +310,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          break ;
       }
 
-      if (subVisual == ILUMINACION){
+      if (modos[4]){
          switch (toupper(tecla)){
             case '0':
                teclamodo = false ;
@@ -337,11 +352,11 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          if(glIsEnabled(GL_LIGHTING)){
             case '3':
                cout << "Activado/desactivado : Iluminacion suave" << endl ;
-               subDibujo =SUAVE ;
+               shaders = true ;
             break ;
             case '4':
                cout << "Activado/desactivado : Iluminacion plana" << endl ;
-               subDibujo =PLANO ;
+               shaders = false ;
             break ;
          }
       }
@@ -349,6 +364,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
 
    if (subVisual == JERARQUICOMAN)
    {
+      teclamodo = false ;
       switch(toupper(tecla)){
          case '+' :
             if (grados_libertad[0]) ganso -> caerPetalo(10,-10) ;
@@ -399,12 +415,16 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
 
    if (subVisual == JERARQUICOAUTO)
    {
+      teclamodo = false ;
       switch(toupper(tecla)){
          case '+' :
             animacion += 0.1 ;
          break ;
          case '-' :
-            animacion -= 0.1 ;
+            if (animacion > 0.1)
+               animacion -= 0.1 ;
+            else
+               std::cout <<"Si seguimos hacia atrás, el movimiento sería caótico. Queda en pausa." << std::endl ;
          break ;
       }
    }
@@ -488,8 +508,9 @@ void Escena::change_observer()
 }
 
 void Escena::animarModeloJerarquico(){
+   teclamodo = false ;
    ganso -> caerPetalo(animacion,-animacion) ;
-   ganso -> rotarPiernaDerecha(-animacion) ;
+   ganso -> rotarPiernaDerecha(animacion) ;
    ganso -> rotarPiernaIzquierda(animacion) ;
    ganso -> rotarCabeza(animacion,animacion,animacion) ;
    ganso -> rotarCuello(animacion,animacion) ;   
