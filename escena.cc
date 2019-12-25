@@ -23,17 +23,44 @@ Escena::Escena()
     // .....
 
     cubo = new Cubo(100) ;
+    cubo -> setTextura(new Textura("img/madera.jpg")) ;
+    cubo -> setColorSolido({1,1,1}) ;
+    cubo -> setMaterial(new MaterialNaranja()) ;
     tetraedro = new Tetraedro(100) ;
+    tetraedro -> setTextura(new Textura("img/Dado.jpg")) ;
     ply = new ObjPLY("plys/ant.ply") ;
     ply2 = new ObjPLY("plys/cesta.ply") ;
     cilindro = new Cilindro(1,20,70,40) ;
     peonesp = new ObjRevolucion("plys/peon_inverso.ply",20,true,true) ;
+    peonesp -> setColorSolido({0.1,0.1,0.1}) ;
     peondif = new ObjRevolucion("plys/peon.ply",20,true,true) ;
+    peondif -> setColorSolido({0.9,0.9,0.9}) ;
     cono = new Cono(1, 20, 70, 40) ;
     esfera = new Esfera(50,50,40) ;
     ganso = new Ganso() ;
+    cuadro = new Cuadro() ;
+    cuadro -> setTextura(new Textura("img/Cemento.jpg")) ;
+    skybox1 = new Cuadro() ;
+    skybox1 -> setTextura(new Textura("img/Skybox1.jpg")) ;
+    skybox1 -> setColorSolido({1,1,1}) ;
+    skybox2 = new Cuadro();
+    skybox2 -> setTextura(new Textura("img/Skybox2.jpg")) ;
+    skybox2 -> setColorSolido({1,1,1}) ;
+    skybox3 = new Cuadro() ;
+    skybox3 -> setTextura(new Textura("img/Skybox3.jpg")) ;
+    skybox3 -> setColorSolido({1,1,1}) ;
+    skybox4 = new Cuadro();
+    skybox4 -> setTextura(new Textura("img/Skybox4.jpg")) ;
+    skybox4 -> setColorSolido({1,1,1}) ;
+    cielo = new Cuadro() ;
+    cielo -> setTextura(new Textura("img/Cielo.jpg")) ;
+    cielo -> setColorSolido({1,1,1}) ;
+    ajedrez = new Cuadro() ;
+    ajedrez -> setTextura (new Textura("img/ajedrez.jpg")) ;
+    ajedrez -> setColorSolido({1,1,1}) ;
     luzdir = new LuzDireccional({0.0,30.0},GL_LIGHT1,{1.0,1.0,1.0,1.0},{0.0,0.0,0.0,0.0},{1.0,1.0,1.0,0.0}) ;
     luzpos = new LuzPosicional({30.0,0.0,0.0},GL_LIGHT2,{1.0,1.0,1.0,1.0},{1.0,1.0,1.0,1.0},{1.0,1.0,1.0,1.0}) ;
+    luzpos2 = new LuzPosicional({0.0,-45.0,0.0},GL_LIGHT3,{0.0,1.0,1.0,1.0},{0.0,1.0,1.0,1.0},{0.0,1.0,1.0,1.0}) ;
     modoDib = false ;
     modo = 2;
     modoDib = 1 ;
@@ -70,6 +97,7 @@ void Escena::inicializar( int UI_window_width, int UI_window_height )
 void Escena::dibujar()
 {
    glDisable (GL_LIGHTING) ;
+   glDisable(GL_TEXTURE_2D) ;
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // Limpiar la pantalla
 	change_observer();
    glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER,GL_TRUE) ;
@@ -119,6 +147,12 @@ void Escena::dibujar()
          else luzpos->desactivar() ;
       glPopMatrix() ;
 
+      glPushMatrix() ;
+         glScalef(0,luzpos2->getAltura(),0) ;
+         if(luces[2]) luzpos2->activar() ;
+         else luzpos2->desactivar() ;
+      glPopMatrix() ;
+
       glPushMatrix();
          glTranslatef(0,0,-100);
          glTranslatef(0,-35,0);
@@ -127,17 +161,39 @@ void Escena::dibujar()
       glPopMatrix();
 
       glPushMatrix();
-         glTranslatef(0,0,100);
-         glTranslatef(0,-45,0);
-         glScalef (0.6,0.6,0.6) ;
-         tetraedro->draw(modoDib,modos) ;
-      glPopMatrix();
 
-      glPushMatrix();
          glTranslatef(-100,0,0);
-         glTranslatef(0,-25,0);
-         glScalef (0.6,0.6,0.6) ;
-         cubo->draw(modoDib, modos) ;
+         glTranslatef(0,-65,0);
+
+         glPushMatrix () ;
+            glScalef (0.6,0.1,0.6) ;
+            cubo->draw(modoDib, modos) ;
+         glPopMatrix() ;
+
+         glPushMatrix () ;
+            glTranslatef(0,6,0) ;
+            glScalef (50,50,50) ;
+            ajedrez->draw(modoDib, modos) ;
+         glPopMatrix() ;
+
+         glPushMatrix();
+            glTranslatef(10,13,-10) ;
+            glScalef (5,5,5) ;
+            peonesp->draw(modoDib,modos) ;
+         glPopMatrix();
+
+         glPushMatrix();
+            glTranslatef(-10,13,10) ;
+            glScalef (5,5,5) ;
+            peondif->draw(modoDib,modos) ;
+         glPopMatrix();
+
+         glPushMatrix();
+            glTranslatef(-20,13,-20) ;
+            glScalef (0.1,0.1,0.1) ;
+            tetraedro->draw(modoDib,modos) ;
+         glPopMatrix();
+
       glPopMatrix();
 
       glPushMatrix();
@@ -148,8 +204,7 @@ void Escena::dibujar()
       glPopMatrix();
 
       glPushMatrix();
-         glTranslatef(0,-70,0);
-         glScalef (5,0.2,5) ;
+         glTranslatef(100,0,100);
          cilindro->draw(modoDib,modos) ;
       glPopMatrix();
 
@@ -160,25 +215,59 @@ void Escena::dibujar()
          ply->draw(modoDib,modos) ;
       glPopMatrix();
 
-      glPushMatrix();
-         glTranslatef(-100,10,100);
-         glTranslatef(0,-45,0);
-         glScalef (10,10,10) ;
-         peonesp->draw(modoDib,modos) ;
-      glPopMatrix();
-
-      glPushMatrix();
-         glTranslatef(-100,10,-100);
-         glTranslatef(0,-45,0);
-         glScalef (10,10,10) ;
-         peondif->draw(modoDib,modos) ;
-      glPopMatrix();
-
 
       glPushMatrix() ;
+         glTranslatef(0,-20,0) ;
          glScalef(0.3,0.3,0.3) ;
          ganso->draw(modoDib,modos) ;
       glPopMatrix() ;
+
+      glPushMatrix() ;
+         glTranslatef(0,-70,0) ;
+         glScalef(700,700,700) ;
+         cuadro-> draw(modoDib,modos) ;
+      glPopMatrix() ;
+
+      glPushMatrix() ;
+         glTranslatef(0,150,-350) ;
+         glScalef(700,500,0) ;
+         glRotatef(180,0,0,1) ;
+         glRotatef(90,1,0,0) ;
+         skybox1-> draw(modoDib,modos) ;
+      glPopMatrix() ;
+
+
+      glPushMatrix() ;
+         glRotatef(-90,0,1,0) ;
+         glTranslatef(0,150,350) ;
+         glScalef(700,500,0) ;
+         glRotatef(-90,1,0,0) ;
+         skybox2-> draw(modoDib,modos) ;
+      glPopMatrix() ;
+
+      glPushMatrix() ;
+         glTranslatef(0,150,350) ;
+         glScalef(700,500,0) ;
+         glRotatef(-90,1,0,0) ;
+         skybox3-> draw(modoDib,modos) ;
+      glPopMatrix() ;
+
+      glPushMatrix() ;
+         glRotatef(90,0,1,0) ;
+         glTranslatef(0,150,350) ;
+         glScalef(700,500,0) ;
+         glRotatef(-90,1,0,0) ;
+         skybox4-> draw(modoDib,modos) ;
+      glPopMatrix() ;
+
+      glPushMatrix() ;
+         glTranslatef(0,400,0) ;
+         glRotatef(180,1,0,0) ;
+         glScalef(700,700,700) ;
+         cielo-> draw(modoDib,modos) ;
+      glPopMatrix() ;
+
+
 
       glDisable(GL_NORMALIZE) ;
     
@@ -300,12 +389,14 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             cout << "Activado/desactivado : Iluminacion" << endl ;
             subVisual=ILUMINACION;
          break;
-         case 'V' :
+         case 'M' :
             cout << "Activado/desactivado : Animacion Manual"  <<endl ;
+            pausa = true ;
             subVisual = JERARQUICOMAN ;
          break ;
          case 'J' :
             cout << "Activado/desactivado : Modificacion de Animacion Automática"  <<endl ;
+            pausa = false ;
             subVisual = JERARQUICOAUTO ;
          break ;
       }
@@ -323,6 +414,12 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
                subIlum = LUZ1 ;
                cout << "Activado/desactivado : Luz Posicional" << endl ;
                luces[1] = !luces[1] ;
+            break;
+            case '2':
+               teclamodo = false ;
+               subIlum = LUZ2 ;
+               cout << "Activado/desactivado : Luz Posicional 2" << endl ;
+               luces[2] = !luces[2] ;
             break;
          }
       }
@@ -375,6 +472,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             if (grados_libertad[5]) ganso -> rotarCabeza(0,0,2) ;
             if (grados_libertad[6]) ganso -> rotarCuello(2,0) ;
             if (grados_libertad[7]) ganso -> rotarCuello(0,2) ;
+            if (grados_libertad[8]) luzpos2 -> translacion(10) ;
          break ;
          case '-' :
             if (grados_libertad[0]) ganso -> caerPetalo(-10,10) ;
@@ -385,6 +483,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             if (grados_libertad[5]) ganso -> rotarCabeza(0,0,-2) ;
             if (grados_libertad[6]) ganso -> rotarCuello(-2,0) ;
             if (grados_libertad[7]) ganso -> rotarCuello(0,-2) ;
+            if (grados_libertad[8]) luzpos2 -> translacion(-10) ;
          break ;
          case '0' :/*PetaloXY*/
             grados_libertad[0] = !grados_libertad[0] ;
@@ -409,6 +508,9 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          break ;
          case '7' :/*Chi*/
             grados_libertad[7] = !grados_libertad[7] ;
+         break ;
+         case '8' : /*Luz Posicional 2*/
+            grados_libertad[8] = !grados_libertad[8] ;
          break ;
       }
    }
@@ -509,9 +611,12 @@ void Escena::change_observer()
 
 void Escena::animarModeloJerarquico(){
    teclamodo = false ;
-   ganso -> caerPetalo(animacion,-animacion) ;
-   ganso -> rotarPiernaDerecha(animacion) ;
-   ganso -> rotarPiernaIzquierda(animacion) ;
-   ganso -> rotarCabeza(animacion,animacion,animacion) ;
-   ganso -> rotarCuello(animacion,animacion) ;   
+   if (!pausa){
+      ganso -> caerPetalo(animacion,-animacion) ;
+      ganso -> rotarPiernaDerecha(animacion) ;
+      ganso -> rotarPiernaIzquierda(animacion) ;
+      ganso -> rotarCabeza(animacion,animacion,animacion) ;
+      ganso -> rotarCuello(animacion,animacion) ;
+      luzpos2 -> translacion(animacion) ; 
+   }  
 }

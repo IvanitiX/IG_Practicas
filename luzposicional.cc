@@ -13,4 +13,14 @@ LuzPosicional::LuzPosicional(const Tupla3f & punto, GLenum idLuz,
     colorEspecular = especular ;
 
     tipo = 2 ;
+    altura = 0.0 ;
+    sentido = true ;
 }
+
+void LuzPosicional::translacion(int incremento_y){
+    if(altura <= 0) {altura+=incremento_y ; sentido = true ;} 
+    else if(altura >= 10) {altura-=incremento_y ; sentido = false ;}
+    sentido ? altura+=incremento_y : altura-=incremento_y ;
+}
+
+float LuzPosicional::getAltura(){ return altura ; }

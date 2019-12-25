@@ -11,6 +11,7 @@
 #include "cilindro.h"
 #include "esfera.h"
 #include "jerarquico.h"
+#include "cuadro.h"
 #include "luz.h"
 #include "luzdireccional.h"
 #include "luzposicional.h"
@@ -18,7 +19,7 @@
 #include "materiales.h"
 
 typedef enum {OUTV, PUNTOS, LINEAS, COLOR, AJEDREZ, ILUMINACION, JERARQUICOMAN, JERARQUICOAUTO} submenu_visual ;
-typedef enum {OFF,LUZ0,LUZ1} submenu_iluminacion ;
+typedef enum {OFF,LUZ0,LUZ1, LUZ2} submenu_iluminacion ;
 typedef enum {OUTO, TETRAEDRO, CUBO, PLY} submenu_objeto ;
 typedef enum {OUTD, INMEDIATO, DIFERIDO, PLANO, SUAVE} submenu_dibujo ;
 typedef enum {NADA, SELOBJETO,SELVISUALIZACION,SELDIBUJADO} menu;
@@ -65,9 +66,17 @@ class Escena
    Cilindro * cilindro = nullptr ;
    Esfera * esfera = nullptr ;
    Ganso * ganso = nullptr ;
+   Cuadro * cuadro = nullptr ;
+   Cuadro * ajedrez = nullptr ;
+   Cuadro * skybox1 = nullptr ;
+   Cuadro * skybox2 = nullptr ;
+   Cuadro * skybox3 = nullptr ;
+   Cuadro * skybox4 = nullptr ;
+   Cuadro * cielo = nullptr ;
    Luz * luz = nullptr ;
    LuzDireccional * luzdir = nullptr ;
    LuzPosicional * luzpos = nullptr ;
+   LuzPosicional * luzpos2 = nullptr ;
 
    int veces_sup = 0, veces_inf = 0 ;
    float animacion = 1.0 ;
@@ -75,9 +84,10 @@ class Escena
    bool teclamodo = false ;
    bool orientacion = false ;
    bool shaders = true ;
+   bool pausa = false ;
    std::vector<bool> modos = {false,false,false,false,false} ;
-   std::vector<bool> luces = {false,false} ;
-   std::vector<bool> grados_libertad = {false,false,false,false,false,false,false,false} ;
+   std::vector<bool> luces = {false,false,false} ;
+   std::vector<bool> grados_libertad = {false,false,false,false,false,false,false,false,false} ;
 
 
    

@@ -13,6 +13,7 @@
 #include "aux.h"
 #include "material.h"
 #include "materiales.h"
+#include "textura.h"
 
 // *****************************************************************************
 //
@@ -38,25 +39,29 @@ class Malla3D
 
    void setMaterial (Material * mat) ;
    void setColorSolido(Tupla3f color) ;
+   void setTextura(Textura * tex) ;
 
    
 
    protected:
+
+   Textura * textura = nullptr ;
+   std::vector<Tupla2f> ct ;
 
    void calcular_normales() ; // calcula tabla de normales de vértices (práctica 3)
 
    std::vector<Tupla3f> v ;   // tabla de coordenadas de vértices (una tupla por vértice, con tres floats)
    std::vector<Tupla3i> f ; // una terna de 3 enteros por cada cara o triángulo
    Tupla3f puntos, linea, solido ;
-   std::vector<Tupla3f> colores_solido, colores_linea, colores_puntos ;
-   std::vector<Tupla3f> colores, normales ;
+   std::vector<Tupla3f> colores_solido, colores_linea, colores_puntos, colores ;
+   std::vector<Tupla3f> normales ;
    Tupla3f color_par_ajedrez, color_impar_ajedrez;
    Material * material = nullptr;
 
 
    GLuint CrearVBO(GLuint, GLuint, GLvoid*) ;
 
-   GLuint id_vbo_ver = 0 , id_vbo_tri = 0, id_vbo_normales = 0 , id_vbo_color_solido = 0 ,id_vbo_color_puntos = 0 ,id_vbo_color_lineas = 0 ;
+   GLuint id_vbo_ver = 0 , id_vbo_tri = 0, id_vbo_normales = 0 , id_vbo_color = 0 ;
 
    std::vector<bool> modos = {false,false,false,false,false} ;
    int ultimoModo = -1 ;
