@@ -159,6 +159,8 @@ class TuplaG3 : public TuplaG<T,3>
 
    // producto vectorial (cross)  a = v1.cross(v2)
    TuplaG3<T> cross( const TuplaG3<T> & v2 ) const ;
+   //Producto Escalar (scalar)
+   float scalar( const TuplaG3<T> & v2 , const int d) const ;
 } ;
 
 
@@ -516,6 +518,17 @@ TuplaG3<T> TuplaG3<T>::cross( const TuplaG3<T> & v2 ) const
                        (*this)(2)*v2(0) -  (*this)(0)*v2(2),
                        (*this)(0)*v2(1) -  (*this)(1)*v2(0)
                      );
+}
+
+template< class T > inline
+float TuplaG3<T>::scalar( const TuplaG3<T> & v2, const int d ) const
+{
+   float resultado = 0;
+
+	for (int i=0; i < d; i++) {
+		resultado += (*this)(i) * v2(i);
+	}
+	return resultado;
 }
 
 // *********************************************************************

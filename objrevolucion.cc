@@ -52,6 +52,7 @@ void ObjRevolucion::crearMalla(std::vector<Tupla3f> perfil_original, int num_ins
    detectarTapas(perfil_original) ;
    crearTablaVertices(despolarizado,num_instancias) ;
    crearTablaTriangulos(despolarizado,num_instancias) ;
+   crearTablaCoordenadas(despolarizado,num_instancias) ;
    detectarTapas(perfil_original) ;
    if (extremos[0] && tapa_inf) crearTapaInferior(perfil_original, num_instancias) ;
    if (extremos[1] && tapa_sup) crearTapaSuperior(perfil_original, num_instancias) ;
@@ -59,23 +60,61 @@ void ObjRevolucion::crearMalla(std::vector<Tupla3f> perfil_original, int num_ins
 
 void ObjRevolucion::crearTablaVertices(std::vector<Tupla3f> perfil_original, int num_instancias){
    v.clear() ;
+   std::vector<Tupla3f> primerainstancia ;
    for (unsigned i = 0 ; i < num_instancias ; i++){
       for (unsigned j = 0 ; j < perfil_original.size()  ; j++){
          Tupla3f instancia_perfil_rotado = Rotacion(/*Añadir eje,*/ perfil_original[j],i,num_instancias) ;
          v.push_back(instancia_perfil_rotado) ;
+         if (i == 0) primerainstancia.push_back(instancia_perfil_rotado) ;
       }
+   }
+   for (int i = 0 ; i < primerainstancia.size() ; i++){
+      v.push_back(primerainstancia[i]) ;
    }
 }
 
 void ObjRevolucion::crearTablaTriangulos(std::vector<Tupla3f> perfil_original, int num_instancias){
    f.clear() ;
+   std::vector<Tupla3i> primerainstancia ;
    for (unsigned i = 0 ; i < num_instancias ; i++){
-      for (unsigned j = 0 ; j < perfil_original.size() - 1 ; j++){
+      for (unsigned j = 0 ; j < perfil_original.size() ; j++){
          float a = perfil_original.size() * i + j ;
          float b = perfil_original.size() * ((i+1) % num_instancias) + j ;
          f.push_back({a,b,b+1}) ;
          f.push_back({a,b+1,a+1}) ;
+         if (i == 0){
+            primerainstancia.push_back({a,b,b+1}) ;
+            primerainstancia.push_back({a,b+1,a+1}) ;
+         }
       }
+   }
+   for (int i = 0 ; i < primerainstancia.size() ; i++){
+      std::cout << "Cara de primera instancia\n" ;
+      f.push_back(primerainstancia[i]) ;
+   }
+}
+
+void ObjRevolucion::crearTablaCoordenadas(std::vector<Tupla3f> perfil_original,int num_instancias){
+   ct.clear();
+   float x = 0,y,raiz ;
+   std::vector<float>  dif ;
+   raiz = sqrt(pow(perfil_asociado[0][0] - perfil_asociado[perfil_asociado.size()-2][0],2)
+                  +pow(perfil_asociado[0][1] - perfil_asociado[perfil_asociado.size()-2][1],2)
+                  +pow(perfil_asociado[0][2] - perfil_asociado[perfil_asociado.size()-2][2],2)) ;
+   dif.push_back(raiz) ;
+   for (int i = 1 ; i < perfil_original.size() ; i++){
+         raiz = sqrt(pow(perfil_original[i][0] - perfil_original[i-1][0],2)
+                  +pow(perfil_original[i][1] - perfil_original[i-1][1],2)
+                  +pow(perfil_original[i][2] - perfil_original[i-1][2],2)) ;
+         dif.push_back(dif[i-1]+raiz) ;
+   }
+
+   for(int i = 0 ; i <= num_instancias ; i++){
+      for(int j = 0 ; j < perfil_original.size() ; j++){
+         y = dif[j]/dif[dif.size()-1] ;
+         ct.push_back({x,y}) ;
+      }
+      x = (i*1.0)/(num_instancias+1) ;
    }
 }
 
@@ -103,8 +142,8 @@ void ObjRevolucion::crearTapaInferior(std::vector<Tupla3f> perfil_original, int 
       polos.push_back(perfil_original[i]) ;
    }
    v.push_back(polos[0]) ;
-         int tam = v.size() ;
-   for (int i = 0 ; i < num_instancias; i++ ){
+   int tam = v.size() ;
+   for (int i = 0 ; i <= num_instancias; i++ ){
          f.push_back({ v.size() - 1 ,((i+2)*despolarizado.size() % (v.size()-1)) ,((i+1)*despolarizado.size() % (v.size()-1))});
    }
 }
@@ -118,8 +157,9 @@ void ObjRevolucion::crearTapaSuperior(std::vector<Tupla3f> perfil_original, int 
       polos.push_back(perfil_original[i]) ;
    }
    v.push_back(polos[1]) ;
-         int tam = v.size() ;
-   for (int i = 0 ; i < num_instancias; i++ ){
+   int tam = v.size() ;
+   ct.push_back({0.5,0.5}) ;
+   for (int i = 0 ; i <= num_instancias; i++ ){
          f.push_back({ v.size() - 1 ,(((i+1)*despolarizado.size()-1) % (v.size()-2)) ,(((i+2)*despolarizado.size()-1) % (v.size()-2))});
    }
 }

@@ -92,6 +92,17 @@ void funcion_idle(){
       glutPostRedisplay() ;
    }
 
+void clickRaton(GLint button, GLint state, GLint x, GLint y){
+   escena->clickRaton( button, state, x, y);
+   glutPostRedisplay();
+}
+
+
+void ratonMovido(int x, int y){
+   escena->ratonMovido( x, y);
+   glutPostRedisplay();  
+}
+
 //***************************************************************************
 // Programa principal
 //
@@ -145,6 +156,7 @@ int main( int argc, char **argv )
    //Practica 4 - Animacion Idle
    glutIdleFunc(funcion_idle) ;
 
+
    // inicialización de librería GLEW (solo en Linux)
    #ifdef LINUX
    const GLenum codigoError = glewInit();
@@ -161,7 +173,9 @@ int main( int argc, char **argv )
    escena->inicializar( UI_window_width, UI_window_height );
 
 
-
+   //Practica 6-Funcion Ratón y Movimiento
+   glutMouseFunc(clickRaton) ;
+   glutMotionFunc(ratonMovido) ;
    // ejecutar del bucle de eventos
    glutMainLoop();
 

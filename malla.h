@@ -36,6 +36,7 @@ class Malla3D
    // está función llama a 'draw_ModoInmediato' (modo inmediato)
    // o bien a 'draw_ModoDiferido' (modo diferido, VBOs)
    void draw(int, std::vector<bool>) ;
+   void draw() ;
 
    void setMaterial (Material * mat) ;
    void setColorSolido(Tupla3f color) ;

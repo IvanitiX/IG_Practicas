@@ -41,6 +41,7 @@ class ObjRevolucion : public Malla3D
        Tupla3f Rotacion(/*char eje,*/Tupla3f vertice, unsigned instancia, unsigned num_instancias) ;
        void crearTapaSuperior(std::vector<Tupla3f> perfil_original, int num_instancias);
        void crearTapaInferior(std::vector<Tupla3f> perfil_original, int num_instancias);
+       void crearTablaCoordenadas(std::vector<Tupla3f> perfil_original,int num_instancias) ;
 
       /*Variables*/
        bool extremos[2] ;

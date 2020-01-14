@@ -17,8 +17,9 @@
 #include "luzposicional.h"
 #include "aux.h"
 #include "materiales.h"
+#include "camara.h"
 
-typedef enum {OUTV, PUNTOS, LINEAS, COLOR, AJEDREZ, ILUMINACION, JERARQUICOMAN, JERARQUICOAUTO} submenu_visual ;
+typedef enum {OUTV, PUNTOS, LINEAS, COLOR, AJEDREZ, ILUMINACION, JERARQUICOMAN, JERARQUICOAUTO, SELCAMARA} submenu_visual ;
 typedef enum {OFF,LUZ0,LUZ1, LUZ2} submenu_iluminacion ;
 typedef enum {OUTO, TETRAEDRO, CUBO, PLY} submenu_objeto ;
 typedef enum {OUTD, INMEDIATO, DIFERIDO, PLANO, SUAVE} submenu_dibujo ;
@@ -60,6 +61,7 @@ class Escena
    int modo ;
    ObjPLY * ply = nullptr ;
    ObjPLY * ply2 = nullptr ;
+   ObjPLY * banco = nullptr ;
    ObjRevolucion * peondif = nullptr ;
    ObjRevolucion * peonesp = nullptr ;
    Cono * cono = nullptr ;
@@ -84,10 +86,17 @@ class Escena
    bool teclamodo = false ;
    bool orientacion = false ;
    bool shaders = true ;
-   bool pausa = false ;
+   bool pausa = true ;
+   bool botonIzquierdo = false ;
+   bool seleccion = false ;
+
+   //Vectores e índices
    std::vector<bool> modos = {false,false,false,false,false} ;
    std::vector<bool> luces = {false,false,false} ;
    std::vector<bool> grados_libertad = {false,false,false,false,false,false,false,false,false} ;
+   int camaraActiva ;
+   std::vector<Camara> camaras ;
+   float x_ant, y_ant ;
 
 
    
@@ -108,6 +117,10 @@ class Escena
 	// Interacción con la escena
 	bool teclaPulsada( unsigned char Tecla1, int x, int y ) ;
 	void teclaEspecial( int Tecla1, int x, int y );
+    void clickRaton(int boton, int estado, int x, int y) ;
+    void ratonMovido(int x, int y) ;
+    void procesarClick(int x, int y) ;
+    void dibujarSeleccion() ;
 
     //Practica 4- Animacion automatica
     void animarModeloJerarquico() ;

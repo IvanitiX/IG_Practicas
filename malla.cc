@@ -184,6 +184,15 @@ void Malla3D::draw_ModoDiferido(std::vector<bool> modos)
 // Función de visualización de la malla,
 // puede llamar a  draw_ModoInmediato o bien a draw_ModoDiferido
 
+void Malla3D::draw(){
+   glEnableClientState(GL_VERTEX_ARRAY) ;
+   glVertexPointer( 3,GL_FLOAT, 0, v.data() ) ;
+   
+   glDrawElements(GL_TRIANGLES,f.size()*3,GL_UNSIGNED_INT, f.data()) ;
+
+   glDisableClientState(GL_VERTEX_ARRAY) ;
+}
+
 void Malla3D::draw(int modo_dibujado , std::vector<bool> modos)
 {
    if(colores.empty()){

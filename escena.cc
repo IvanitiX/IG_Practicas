@@ -1,4 +1,5 @@
-
+#define GLUT_MOUSE_WHEELDOWN 3
+#define GLUT_MOUSE_WHEELUP 4
 
 #include "aux.h"     // includes de OpenGL/glut/glew, windows, y librería std de C++
 #include "escena.h"
@@ -22,6 +23,7 @@ Escena::Escena()
     // .......completar: ...
     // .....
 
+   //Montaje de Escena
     cubo = new Cubo(100) ;
     cubo -> setTextura(new Textura("img/madera.jpg")) ;
     cubo -> setColorSolido({1,1,1}) ;
@@ -30,16 +32,26 @@ Escena::Escena()
     tetraedro -> setTextura(new Textura("img/Dado.jpg")) ;
     ply = new ObjPLY("plys/ant.ply") ;
     ply2 = new ObjPLY("plys/cesta.ply") ;
+    banco = new ObjPLY("plys/banco.ply") ;
+    banco -> setColorSolido({0.5508,0.2852,0.1445}) ;
+    banco -> setMaterial(new MaterialNaranja()) ;
     cilindro = new Cilindro(1,20,70,40) ;
+    cilindro -> setTextura(new Textura("img/Cemento.jpg")) ;
+    cilindro -> setColorSolido({1,1,1}) ;
     peonesp = new ObjRevolucion("plys/peon_inverso.ply",20,true,true) ;
     peonesp -> setColorSolido({0.1,0.1,0.1}) ;
     peondif = new ObjRevolucion("plys/peon.ply",20,true,true) ;
     peondif -> setColorSolido({0.9,0.9,0.9}) ;
     cono = new Cono(1, 20, 70, 40) ;
+    cono -> setTextura(new Textura("img/Cemento.jpg")) ;
+    cono -> setColorSolido({1,1,1}) ;
     esfera = new Esfera(50,50,40) ;
+    esfera -> setTextura(new Textura("img/Cemento.jpg")) ;
+    esfera -> setColorSolido({1,1,1}) ;
     ganso = new Ganso() ;
     cuadro = new Cuadro() ;
     cuadro -> setTextura(new Textura("img/Cemento.jpg")) ;
+    cuadro -> setColorSolido({1,1,1}) ;
     skybox1 = new Cuadro() ;
     skybox1 -> setTextura(new Textura("img/Skybox1.jpg")) ;
     skybox1 -> setColorSolido({1,1,1}) ;
@@ -58,9 +70,23 @@ Escena::Escena()
     ajedrez = new Cuadro() ;
     ajedrez -> setTextura (new Textura("img/ajedrez.jpg")) ;
     ajedrez -> setColorSolido({1,1,1}) ;
+
+    //Luces
     luzdir = new LuzDireccional({0.0,30.0},GL_LIGHT1,{1.0,1.0,1.0,1.0},{0.0,0.0,0.0,0.0},{1.0,1.0,1.0,0.0}) ;
     luzpos = new LuzPosicional({30.0,0.0,0.0},GL_LIGHT2,{1.0,1.0,1.0,1.0},{1.0,1.0,1.0,1.0},{1.0,1.0,1.0,1.0}) ;
     luzpos2 = new LuzPosicional({0.0,-45.0,0.0},GL_LIGHT3,{0.0,1.0,1.0,1.0},{0.0,1.0,1.0,1.0},{0.0,1.0,1.0,1.0}) ;
+    
+    //Cámaras
+    Camara * cam1 = new Camara({0, 10, -20}, {0, 0, 0}, {0, 100, 0}, 1,-300, 300,-500,Back_plane,300, -300) ;
+    Camara * cam2 = new Camara({200, 0, 0}, {0, 0, 0}, {0, 1, 0}, 0,-69, 69, 40,Back_plane,69, -69) ;
+    Camara * cam3 = new Camara({0, 70, 0}, {0, 0, 0}, {0, 0, 1}, 1,-700, 700,-500,Back_plane,700, -700) ;
+    camaraActiva = 0 ;
+   camaras.push_back(*cam1);
+   camaras.push_back(*cam2) ;
+   camaras.push_back(*cam3) ;
+   x_ant = y_ant = 0 ;
+
+    //Variables y basura
     modoDib = false ;
     modo = 2;
     modoDib = 1 ;
@@ -154,70 +180,78 @@ void Escena::dibujar()
       glPopMatrix() ;
 
       glPushMatrix();
-         glTranslatef(0,0,-100);
-         glTranslatef(0,-35,0);
-         glScalef (0.6,0.6,0.6) ;
-         esfera->draw(modoDib,modos) ;
-      glPopMatrix();
-
-      glPushMatrix();
-
-         glTranslatef(-100,0,0);
-         glTranslatef(0,-65,0);
+         glTranslatef(0,-70,-200) ;
 
          glPushMatrix () ;
+            glTranslatef(0,50,0) ;
             glScalef (0.6,0.1,0.6) ;
             cubo->draw(modoDib, modos) ;
          glPopMatrix() ;
 
          glPushMatrix () ;
-            glTranslatef(0,6,0) ;
+            glTranslatef(0,56,0) ;
             glScalef (50,50,50) ;
             ajedrez->draw(modoDib, modos) ;
          glPopMatrix() ;
 
          glPushMatrix();
-            glTranslatef(10,13,-10) ;
+            glTranslatef(10,63,-10) ;
             glScalef (5,5,5) ;
             peonesp->draw(modoDib,modos) ;
          glPopMatrix();
 
          glPushMatrix();
-            glTranslatef(-10,13,10) ;
+            glTranslatef(-10,63,10) ;
             glScalef (5,5,5) ;
             peondif->draw(modoDib,modos) ;
          glPopMatrix();
 
          glPushMatrix();
-            glTranslatef(-20,13,-20) ;
+            glTranslatef(-20,63,-20) ;
             glScalef (0.1,0.1,0.1) ;
             tetraedro->draw(modoDib,modos) ;
          glPopMatrix();
 
+         glPushMatrix() ;
+            glScalef(100,100,100) ;
+            glRotatef(-90,1,0,0) ;
+            banco -> draw(modoDib,modos) ;
+         glPopMatrix() ;
+
       glPopMatrix();
 
-      glPushMatrix();
-         glTranslatef(100,0,0);
-         glTranslatef(0,-45,0);
-         glScalef (0.6,0.6,0.6) ;
-         cono->draw(modoDib,modos) ;
-      glPopMatrix();
+      glPushMatrix() ;
+         glTranslatef(0,-60,0) ;
+         glPushMatrix();
+            glTranslatef(0,110,0);
+            glScalef (0.6,0.6,0.6) ;
+            cono->draw(modoDib,modos) ;
+         glPopMatrix();
 
-      glPushMatrix();
-         glTranslatef(100,0,100);
-         cilindro->draw(modoDib,modos) ;
-      glPopMatrix();
+         glPushMatrix();
+            cilindro->draw(modoDib,modos) ;
+         glPopMatrix();
+
+         glPushMatrix();
+            glTranslatef(0,90,0);
+            glScalef (0.6,0.6,0.6) ;
+            esfera->draw(modoDib,modos) ;
+         glPopMatrix();
+
+      glPopMatrix() ;
+      
 
       glPushMatrix();
          glTranslatef(100,10,-100);
-         glTranslatef(0,-45,0);
+         glTranslatef(130,-60,0);
          glScalef (0.6,0.6,0.6) ;
          ply->draw(modoDib,modos) ;
       glPopMatrix();
 
 
       glPushMatrix() ;
-         glTranslatef(0,-20,0) ;
+         glTranslatef(100,-20,0) ;
+         glRotatef(90,0,1,0) ;
          glScalef(0.3,0.3,0.3) ;
          ganso->draw(modoDib,modos) ;
       glPopMatrix() ;
@@ -265,6 +299,13 @@ void Escena::dibujar()
          glRotatef(180,1,0,0) ;
          glScalef(700,700,700) ;
          cielo-> draw(modoDib,modos) ;
+      glPopMatrix() ;
+
+      glPushMatrix() ;
+         glTranslatef(0,-70,200) ;
+         glScalef(100,100,100) ;
+         glRotatef(-90,1,0,0) ;
+         banco -> draw(modoDib,modos) ;
       glPopMatrix() ;
 
 
@@ -344,7 +385,8 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          break ;
    }
 
-   if (modoMenu == SELOBJETO){
+   //Esta opción era para la práctica 1.
+   /*if (modoMenu == SELOBJETO){
       teclamodo = false ;
      
       switch (toupper(tecla)){
@@ -361,7 +403,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             subObjeto=PLY;
          break;
       }
-   }
+   }*/
 
    if (modoMenu == SELVISUALIZACION){
       teclamodo = true ;
@@ -396,8 +438,12 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          break ;
          case 'J' :
             cout << "Activado/desactivado : Modificacion de Animacion Automática"  <<endl ;
-            pausa = false ;
+            pausa = !pausa ;
             subVisual = JERARQUICOAUTO ;
+         break ;
+         case 'C' :
+            cout << "Selección de cámara (pulsa tecla 0-2)" ;
+            subVisual = SELCAMARA ;
          break ;
       }
 
@@ -531,7 +577,20 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
       }
    }
    
-   
+   if (subVisual == SELCAMARA){
+      switch(toupper(tecla)){
+         case '0':
+            camaraActiva = 0 ;
+         break ;
+         case '1' :
+            camaraActiva = 1 ;
+         break ;
+         case '2' :
+            camaraActiva = 2 ;
+         break ;
+      }
+      change_projection(1) ;
+   }
 
 
 
@@ -569,6 +628,200 @@ void Escena::teclaEspecial( int Tecla1, int x, int y )
 	//std::cout << Observer_distance << std::endl;
 }
 
+void Escena::clickRaton(int boton, int estado, int x, int y) {
+   botonIzquierdo = (boton == GLUT_LEFT_BUTTON) && (estado == GLUT_DOWN) ;
+  if (estado == GLUT_DOWN) {
+    switch(boton) {
+    case GLUT_LEFT_BUTTON:
+      std::cout << "Click izq. at: (" << x << ", " << y << ")\n";
+      x_ant=x ; y_ant=y ;
+      dibujarSeleccion() ;
+      procesarClick(x,y) ;
+      break;
+    case GLUT_RIGHT_BUTTON:
+      std::cout << "Click der. at: (" << x << ", " << y << ")\n";
+      break;
+    case GLUT_MOUSE_WHEELDOWN:  //mouse wheel scrolls
+         camaras[camaraActiva].zoom(1.02) ;
+         change_projection(1) ;
+      break;
+    case GLUT_MOUSE_WHEELUP:
+         camaras[camaraActiva].zoom(0.98) ;
+         change_projection(1) ;
+      break;
+    }
+  }
+  glutPostRedisplay();
+}
+
+void Escena::ratonMovido(int x, int y){
+   float ang = 0.8 ;
+   if(botonIzquierdo){
+      camaras[camaraActiva].girar(x-x_ant,y-y_ant) ;
+      x_ant=x ; y_ant=y ;
+   }
+}
+
+void Escena::procesarClick(int x, int y){
+   GLint viewport[4];
+   GLubyte pixels[3];
+
+   glGetIntegerv(GL_VIEWPORT, viewport);
+   glReadBuffer(GL_BACK);
+   glReadPixels(x, viewport[3]-y, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, (void *)pixels);
+
+   printf("%d %d %d\n",pixels[0],pixels[1],pixels[2]);
+}
+
+void Escena::dibujarSeleccion(){
+   glDrawBuffer(GL_BACK) ;
+   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT) ;
+   glDisable (GL_DITHER) ;
+   glDisable(GL_LIGHTING) ;
+
+   glPushMatrix();
+         glTranslatef(0,-70,-200) ;
+
+         glPushMatrix () ;
+            glTranslatef(0,50,0) ;
+            glScalef (0.6,0.1,0.6) ;
+            glColor3ub(205,151,0) ;
+            cubo->draw() ;
+         glPopMatrix() ;
+
+         glPushMatrix () ;
+            glTranslatef(0,56,0) ;
+            glScalef (50,50,50) ;
+            ajedrez->draw() ;
+         glPopMatrix() ;
+
+         glPushMatrix();
+            glTranslatef(10,63,-10) ;
+            glScalef (5,5,5) ;
+            glColor3ub(50,104,255) ;
+            peonesp->draw() ;
+         glPopMatrix();
+
+         glPushMatrix();
+            glTranslatef(-10,63,10) ;
+            glScalef (5,5,5) ;
+            glColor3ub(50,255,190) ;
+            peondif->draw() ;
+         glPopMatrix();
+
+         glPushMatrix();
+            glTranslatef(-20,63,-20) ;
+            glScalef (0.1,0.1,0.1) ;
+            glColor3ub(0,255,0) ;
+            tetraedro->draw() ;
+         glPopMatrix();
+
+         glPushMatrix() ;
+            glScalef(100,100,100) ;
+            glRotatef(-90,1,0,0) ;
+            glColor3ub(255,0,255) ;
+            banco -> draw() ;
+         glPopMatrix() ;
+
+      glPopMatrix();
+
+      glPushMatrix() ;
+         glTranslatef(0,-60,0) ;
+         glPushMatrix();
+            glTranslatef(0,110,0);
+            glScalef (0.6,0.6,0.6) ;
+            glColor3ub(255,202,212) ;
+            cono->draw() ;
+         glPopMatrix();
+
+         glPushMatrix();
+            glColor3ub(255,111,138) ;
+            cilindro->draw() ;
+         glPopMatrix();
+
+         glPushMatrix();
+            glTranslatef(0,90,0);
+            glScalef (0.6,0.6,0.6) ;
+            glColor3ub(255,38,79) ;
+            esfera->draw() ;
+         glPopMatrix();
+
+      glPopMatrix() ;
+      
+
+      glPushMatrix();
+         glTranslatef(100,10,-100);
+         glTranslatef(130,-60,0);
+         glScalef (0.6,0.6,0.6) ;
+         ply->draw() ;
+      glPopMatrix();
+
+
+      glPushMatrix() ;
+         glTranslatef(100,-20,0) ;
+         glRotatef(90,0,1,0) ;
+         glScalef(0.3,0.3,0.3) ;
+         //ganso->draw() ;
+      glPopMatrix() ;
+
+      glPushMatrix() ;
+         glTranslatef(0,-70,0) ;
+         glScalef(700,700,700) ;
+         cuadro-> draw() ;
+      glPopMatrix() ;
+
+      glPushMatrix() ;
+         glTranslatef(0,150,-350) ;
+         glScalef(700,500,0) ;
+         glRotatef(180,0,0,1) ;
+         glRotatef(90,1,0,0) ;
+         skybox1-> draw() ;
+      glPopMatrix() ;
+
+
+      glPushMatrix() ;
+         glRotatef(-90,0,1,0) ;
+         glTranslatef(0,150,350) ;
+         glScalef(700,500,0) ;
+         glRotatef(-90,1,0,0) ;
+         skybox2-> draw() ;
+      glPopMatrix() ;
+
+      glPushMatrix() ;
+         glTranslatef(0,150,350) ;
+         glScalef(700,500,0) ;
+         glRotatef(-90,1,0,0) ;
+         skybox3-> draw() ;
+      glPopMatrix() ;
+
+      glPushMatrix() ;
+         glRotatef(90,0,1,0) ;
+         glTranslatef(0,150,350) ;
+         glScalef(700,500,0) ;
+         glRotatef(-90,1,0,0) ;
+         skybox4-> draw() ;
+      glPopMatrix() ;
+
+      glPushMatrix() ;
+         glTranslatef(0,400,0) ;
+         glRotatef(180,1,0,0) ;
+         glScalef(700,700,700) ;
+         cielo-> draw() ;
+      glPopMatrix() ;
+
+      glPushMatrix() ;
+         glTranslatef(0,-70,200) ;
+         glScalef(100,100,100) ;
+         glRotatef(-90,1,0,0) ;
+         glColor3ub(255,0,255) ;
+         banco -> draw() ;
+      glPopMatrix() ;
+
+      glEnable(GL_DITHER) ;
+      if (modos[3]) glEnable(GL_LIGHTING) ;
+
+}
+
 //**************************************************************************
 // Funcion para definir la transformación de proyeccion
 //
@@ -580,8 +833,9 @@ void Escena::change_projection( const float ratio_xy )
 {
    glMatrixMode( GL_PROJECTION );
    glLoadIdentity();
-   const float wx = float(Height)*ratio_xy ;
-   glFrustum( -Width, Width, -Height, Height, Front_plane, Back_plane );
+   /*const float wx = float(Height)*ratio_xy ;
+   glFrustum( -Width, Width, -Height, Height, Front_plane, Back_plane );*/
+   camaras[camaraActiva].setProyeccion() ;
 }
 //**************************************************************************
 // Funcion que se invoca cuando cambia el tamaño de la ventana
@@ -604,9 +858,10 @@ void Escena::change_observer()
    // posicion del observador
    glMatrixMode(GL_MODELVIEW);
    glLoadIdentity();
-   glTranslatef( 0.0, 0.0, -Observer_distance );
-   glRotatef( Observer_angle_y, 0.0 ,1.0, 0.0 );
-   glRotatef( Observer_angle_x, 1.0, 0.0, 0.0 );
+   //glTranslatef( 0.0, 0.0, -Observer_distance );
+   //glRotatef( camaras[camaraActiva].getAnguloX(), 1.0 ,0.0, 0.0 );
+   //glRotatef( camaras[camaraActiva].getAnguloY(), 0.0, 1.0, 0.0 );
+   camaras[camaraActiva].setObserver() ;
 }
 
 void Escena::animarModeloJerarquico(){
