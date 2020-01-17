@@ -186,16 +186,18 @@ void Malla3D::draw_ModoDiferido(std::vector<bool> modos)
 
 void Malla3D::draw(){
    glEnableClientState(GL_VERTEX_ARRAY) ;
+   glEnableClientState(GL_COLOR_ARRAY) ;
    glVertexPointer( 3,GL_FLOAT, 0, v.data() ) ;
-   
+   glColorPointer(3, GL_FLOAT, 0, colores.data());
+   glPolygonMode(GL_FRONT_AND_BACK,GL_FILL) ;
    glDrawElements(GL_TRIANGLES,f.size()*3,GL_UNSIGNED_INT, f.data()) ;
-
+   glDisableClientState(GL_COLOR_ARRAY) ;
    glDisableClientState(GL_VERTEX_ARRAY) ;
 }
 
 void Malla3D::draw(int modo_dibujado , std::vector<bool> modos)
 {
-   if(colores.empty()){
+   if(colores_linea.empty()){
       for (int i = 0 ; i < v.size() ; i++){
          colores.push_back(solido) ;
          colores_puntos.push_back(puntos) ;
@@ -285,6 +287,12 @@ void Malla3D::calcular_normales(){
       colores_solido.clear() ;
       for (int i = 0 ; i < v.size() ; i++)
          colores_solido.push_back(color) ;
+   }
+
+   void Malla3D::setColorInvisible(Tupla3f color){
+      colores.clear() ;
+      for (int i = 0 ; i < v.size() ; i++)
+         colores.push_back(color) ;
    }
 
    void Malla3D::setTextura(Textura * tex){

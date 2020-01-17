@@ -94,6 +94,9 @@ class Escena
    std::vector<bool> modos = {false,false,false,false,false} ;
    std::vector<bool> luces = {false,false,false} ;
    std::vector<bool> grados_libertad = {false,false,false,false,false,false,false,false,false} ;
+
+   //Cámaras
+   std::vector<int> seleccion_camara = {0,0,0} ;
    int camaraActiva ;
    std::vector<Camara> camaras ;
    float x_ant, y_ant ;
@@ -119,7 +122,8 @@ class Escena
 	void teclaEspecial( int Tecla1, int x, int y );
     void clickRaton(int boton, int estado, int x, int y) ;
     void ratonMovido(int x, int y) ;
-    void procesarClick(int x, int y) ;
+    int procesarClick(int x, int y) ;
+    void ratonPasado(int x, int y) ;
     void dibujarSeleccion() ;
 
     //Practica 4- Animacion automatica

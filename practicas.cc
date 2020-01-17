@@ -103,6 +103,10 @@ void ratonMovido(int x, int y){
    glutPostRedisplay();  
 }
 
+void ratonPasado(int x, int y){
+   escena -> ratonPasado(x,y) ;
+}
+
 //***************************************************************************
 // Programa principal
 //
@@ -176,6 +180,7 @@ int main( int argc, char **argv )
    //Practica 6-Funcion Ratón y Movimiento
    glutMouseFunc(clickRaton) ;
    glutMotionFunc(ratonMovido) ;
+   glutPassiveMotionFunc(ratonPasado) ;
    // ejecutar del bucle de eventos
    glutMainLoop();
 

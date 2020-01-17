@@ -40,6 +40,7 @@ class Malla3D
 
    void setMaterial (Material * mat) ;
    void setColorSolido(Tupla3f color) ;
+   void setColorInvisible(Tupla3f color) ;
    void setTextura(Textura * tex) ;
 
    

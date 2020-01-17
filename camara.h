@@ -26,5 +26,6 @@ class Camara{
         //Setters
         void setObserver() ;
         void setProyeccion() ;
+        void setAt(Tupla3f newat) ;
 } ;
 #endif

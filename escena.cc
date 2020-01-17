@@ -1,6 +1,3 @@
-#define GLUT_MOUSE_WHEELDOWN 3
-#define GLUT_MOUSE_WHEELUP 4
-
 #include "aux.h"     // includes de OpenGL/glut/glew, windows, y librería std de C++
 #include "escena.h"
 #include "malla.h" // objetos: Cubo y otros....
@@ -27,48 +24,65 @@ Escena::Escena()
     cubo = new Cubo(100) ;
     cubo -> setTextura(new Textura("img/madera.jpg")) ;
     cubo -> setColorSolido({1,1,1}) ;
+    cubo -> setColorInvisible({1,0,1}) ;
     cubo -> setMaterial(new MaterialNaranja()) ;
     tetraedro = new Tetraedro(100) ;
+    tetraedro -> setColorInvisible({1,0,0}) ;
     tetraedro -> setTextura(new Textura("img/Dado.jpg")) ;
     ply = new ObjPLY("plys/ant.ply") ;
+    ply -> setColorInvisible({0.5,0,0.32}) ;
+    ply -> setColorSolido({0.5,0.9,0.32}) ;
     ply2 = new ObjPLY("plys/cesta.ply") ;
     banco = new ObjPLY("plys/banco.ply") ;
     banco -> setColorSolido({0.5508,0.2852,0.1445}) ;
+    banco -> setColorInvisible({0,0,1}) ;
     banco -> setMaterial(new MaterialNaranja()) ;
     cilindro = new Cilindro(1,20,70,40) ;
     cilindro -> setTextura(new Textura("img/Cemento.jpg")) ;
+    cilindro -> setColorInvisible({0,1,0}) ;
     cilindro -> setColorSolido({1,1,1}) ;
     peonesp = new ObjRevolucion("plys/peon_inverso.ply",20,true,true) ;
+    peonesp -> setColorInvisible({1,1,0}) ;
     peonesp -> setColorSolido({0.1,0.1,0.1}) ;
     peondif = new ObjRevolucion("plys/peon.ply",20,true,true) ;
+    peondif -> setColorInvisible({0,1,1}) ;
     peondif -> setColorSolido({0.9,0.9,0.9}) ;
     cono = new Cono(1, 20, 70, 40) ;
     cono -> setTextura(new Textura("img/Cemento.jpg")) ;
+    cono -> setColorInvisible({0.5,0,1}) ;
     cono -> setColorSolido({1,1,1}) ;
     esfera = new Esfera(50,50,40) ;
     esfera -> setTextura(new Textura("img/Cemento.jpg")) ;
+    esfera -> setColorInvisible({0,0,0.4}) ;
     esfera -> setColorSolido({1,1,1}) ;
     ganso = new Ganso() ;
     cuadro = new Cuadro() ;
     cuadro -> setTextura(new Textura("img/Cemento.jpg")) ;
+    cuadro -> setColorInvisible({0,0,0}) ;
     cuadro -> setColorSolido({1,1,1}) ;
     skybox1 = new Cuadro() ;
     skybox1 -> setTextura(new Textura("img/Skybox1.jpg")) ;
+    skybox1 -> setColorInvisible({0,0,0}) ;
     skybox1 -> setColorSolido({1,1,1}) ;
     skybox2 = new Cuadro();
     skybox2 -> setTextura(new Textura("img/Skybox2.jpg")) ;
+    skybox2 -> setColorInvisible({0,0,0}) ;
     skybox2 -> setColorSolido({1,1,1}) ;
     skybox3 = new Cuadro() ;
     skybox3 -> setTextura(new Textura("img/Skybox3.jpg")) ;
+    skybox3 -> setColorInvisible({0,0,0}) ;
     skybox3 -> setColorSolido({1,1,1}) ;
     skybox4 = new Cuadro();
     skybox4 -> setTextura(new Textura("img/Skybox4.jpg")) ;
+    skybox4 -> setColorInvisible({0,0,0}) ;
     skybox4 -> setColorSolido({1,1,1}) ;
     cielo = new Cuadro() ;
     cielo -> setTextura(new Textura("img/Cielo.jpg")) ;
+    cielo -> setColorInvisible({0,0,0}) ;
     cielo -> setColorSolido({1,1,1}) ;
     ajedrez = new Cuadro() ;
     ajedrez -> setTextura (new Textura("img/ajedrez.jpg")) ;
+    ajedrez -> setColorInvisible({1,0,1}) ;
     ajedrez -> setColorSolido({1,1,1}) ;
 
     //Luces
@@ -156,6 +170,11 @@ void Escena::dibujar()
     }
 
     if(modos[4]) glEnable(GL_LIGHTING) ;
+    if (!modos[4]) {
+       luzdir->desactivar() ;
+       luzpos->desactivar() ;
+       luzpos2->desactivar() ;
+    }
 
       if (!teclamodo) modo = -4 ;
       glEnable (GL_NORMALIZE) ;
@@ -631,38 +650,137 @@ void Escena::teclaEspecial( int Tecla1, int x, int y )
 void Escena::clickRaton(int boton, int estado, int x, int y) {
    botonIzquierdo = (boton == GLUT_LEFT_BUTTON) && (estado == GLUT_DOWN) ;
   if (estado == GLUT_DOWN) {
-    switch(boton) {
-    case GLUT_LEFT_BUTTON:
+    if (boton == GLUT_LEFT_BUTTON){
       std::cout << "Click izq. at: (" << x << ", " << y << ")\n";
       x_ant=x ; y_ant=y ;
       dibujarSeleccion() ;
-      procesarClick(x,y) ;
-      break;
-    case GLUT_RIGHT_BUTTON:
+      int objeto = procesarClick(x,y) ;
+      printf("%d\t", objeto) ;
+      if (seleccion_camara[camaraActiva] != objeto && objeto != 0){
+         seleccion_camara[camaraActiva] = objeto ;
+        switch (objeto){
+           case 1 :
+              printf("BANCO\n") ;
+              camaras[camaraActiva].setAt(Tupla3f(0,-40,100)) ;
+              banco -> setColorSolido({1,1,0}) ;
+              banco -> setMaterial(new MaterialAmarillo()) ;
+           break ;
+           case 2 :
+              printf("TABLERO\n") ;
+              camaras[camaraActiva].setAt(Tupla3f(0,-35,100)) ;
+              cubo -> setColorSolido({1,1,0}) ;
+              cubo -> setMaterial(new MaterialAmarillo()) ;
+           break ;
+           case 4 :
+               printf("HORMIGA\n") ;
+              camaras[camaraActiva].setAt(Tupla3f(0,-40,100)) ;
+              ply -> setColorSolido({1,1,0}) ;
+              ply -> setMaterial(new MaterialAmarillo()) ;
+           break ;
+           case 5 :
+               printf("CILINDRO\n") ;
+              camaras[camaraActiva].setAt(Tupla3f(0,-10,0)) ;
+              cilindro -> setColorSolido({1,1,0}) ;
+              cilindro -> setMaterial(new MaterialAmarillo()) ;
+           break ;
+           case 6 :
+               printf("CONO\n") ;
+              camaras[camaraActiva].setAt(Tupla3f(0,-30,0)) ;
+              cono -> setColorSolido({1,1,0}) ;
+              cono -> setMaterial(new MaterialAmarillo()) ;
+           break ;
+           case 7 :
+               printf("ESFERA\n") ;
+              camaras[camaraActiva].setAt(Tupla3f(0,-70,0)) ;
+              esfera -> setColorSolido({1,1,0}) ;
+              esfera -> setMaterial(new MaterialAmarillo()) ;
+           break ;
+           case 8 :
+               printf("PEÓN NEGRO\n") ;
+              camaras[camaraActiva].setAt(Tupla3f(0,-35,90)) ;
+              peonesp -> setColorSolido({1,1,0}) ;
+              peonesp -> setMaterial(new MaterialAmarillo()) ;
+           break ;
+           case 9 :
+               printf("PEÓN BLANCO\n") ;
+              camaras[camaraActiva].setAt(Tupla3f(0,-35,110)) ;
+              peondif -> setColorSolido({1,1,0}) ;
+              peondif -> setMaterial(new MaterialAmarillo()) ;
+           break ;
+           case 10 :
+              printf("TETRAEDRO\n") ;
+              camaras[camaraActiva].setAt(Tupla3f(0,-35,100)) ;
+              tetraedro -> setColorSolido({1,1,0}) ;
+              tetraedro -> setMaterial(new MaterialAmarillo()) ;
+           break ;
+         }
+      }
+      else if (seleccion_camara[camaraActiva] == objeto){
+            seleccion_camara[camaraActiva] = 0 ;
+            camaras[camaraActiva].setAt({0,0,0}) ;
+         switch (objeto){
+            case 1 :
+              banco -> setMaterial(new MaterialNaranja()) ;
+              banco -> setColorSolido({0.5508,0.2852,0.1445}) ;
+           break ;
+           case 2 :
+              cubo -> setMaterial(new MaterialVerde()) ;
+              cubo -> setColorSolido({1,1,1}) ;
+           break ;
+           case 4 :
+              ply -> setMaterial(new MaterialCian()) ;
+              ply -> setColorSolido({0.5,0.9,0.32}) ;
+           break ;
+           case 5 :
+              cilindro -> setMaterial(new MaterialAmarillo()) ;
+              cilindro -> setColorSolido({1,1,1}) ;
+           break ;
+           case 6 :
+              cono -> setMaterial(new MaterialMagenta()) ;
+              cono -> setColorSolido({1,1,1}) ;
+           break ;
+           case 7 :
+              esfera -> setMaterial(new MaterialMagenta()) ;
+              esfera -> setColorSolido({1,1,1}) ;
+           break ;
+           case 8 :
+              peonesp -> setMaterial(new MaterialUltraEspecular()) ;
+              peonesp -> setColorSolido({0.1,0.1,0.1}) ;
+           break ;
+           case 9 :
+              peondif -> setMaterial(new MaterialUltraDifuso()) ;
+              peondif -> setColorSolido({0.9,0.9,0.9}) ;
+           break ;
+              tetraedro -> setMaterial(new MaterialCian()) ;
+              tetraedro -> setColorSolido({0,0.5,0.5}) ;
+           break ;
+         }
+      }
+      change_observer() ;
+      change_projection(1) ;
+    }
+    if(boton == GLUT_RIGHT_BUTTON){
       std::cout << "Click der. at: (" << x << ", " << y << ")\n";
-      break;
-    case GLUT_MOUSE_WHEELDOWN:  //mouse wheel scrolls
+   }
+    if(boton == 3){  //mouse wheel scrolls
          camaras[camaraActiva].zoom(1.02) ;
          change_projection(1) ;
-      break;
-    case GLUT_MOUSE_WHEELUP:
+    }
+    if (boton==4){
          camaras[camaraActiva].zoom(0.98) ;
          change_projection(1) ;
-      break;
     }
   }
-  glutPostRedisplay();
 }
 
 void Escena::ratonMovido(int x, int y){
-   float ang = 0.8 ;
    if(botonIzquierdo){
       camaras[camaraActiva].girar(x-x_ant,y-y_ant) ;
       x_ant=x ; y_ant=y ;
    }
 }
 
-void Escena::procesarClick(int x, int y){
+int Escena::procesarClick(int x, int y){
    GLint viewport[4];
    GLubyte pixels[3];
 
@@ -670,7 +788,45 @@ void Escena::procesarClick(int x, int y){
    glReadBuffer(GL_BACK);
    glReadPixels(x, viewport[3]-y, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, (void *)pixels);
 
-   printf("%d %d %d\n",pixels[0],pixels[1],pixels[2]);
+   //printf("%d %d %d\n",pixels[0],pixels[1],pixels[2]);
+
+   //A ver que objeto es...
+   if (pixels[0] == 0 && pixels[1] == 0 && pixels[2] == 0){
+      return 0 ;
+   }
+   if (pixels[0] == 0 && pixels[1] == 0 && pixels[2] == 255){
+      return 1 ;
+   }
+   if (pixels[0] == 255 && pixels[1] == 0 && pixels[2] == 255){
+      return 2 ;
+   }
+   if (pixels[0] == 255 && pixels[1] == 128 && pixels[2] == 0){
+      return 3 ;
+   }
+   if (pixels[0] == 128 && pixels[1] == 0 && pixels[2] == 82){
+      return 4 ;
+   }
+   if (pixels[0] == 0 && pixels[1] == 255 && pixels[2] == 0){ ;
+      return 5 ;
+   }
+   if (pixels[0] == 128 && pixels[1] == 0 && pixels[2] == 255){
+      return 6 ;
+   }
+   if (pixels[0] == 0 && pixels[1] == 0 && pixels[2] == 102){;
+      return 7 ;
+   }
+   if (pixels[0] == 255 && pixels[1] == 255 && pixels[2] == 255){
+      return 0 ;
+   }
+   if (pixels[0] == 255 && pixels[1] == 255 && pixels[2] == 0){
+      return 8 ;
+   }
+   if (pixels[0] == 0 && pixels[1] == 255 && pixels[2] == 255){
+      return 9 ;
+   }
+   if (pixels[0] == 255 && pixels[1] == 0 && pixels[2] == 0){
+      return 10 ;
+   }
 }
 
 void Escena::dibujarSeleccion(){
@@ -678,6 +834,7 @@ void Escena::dibujarSeleccion(){
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT) ;
    glDisable (GL_DITHER) ;
    glDisable(GL_LIGHTING) ;
+   glDisable (GL_TEXTURE_2D) ;
 
    glPushMatrix();
          glTranslatef(0,-70,-200) ;
@@ -685,7 +842,6 @@ void Escena::dibujarSeleccion(){
          glPushMatrix () ;
             glTranslatef(0,50,0) ;
             glScalef (0.6,0.1,0.6) ;
-            glColor3ub(205,151,0) ;
             cubo->draw() ;
          glPopMatrix() ;
 
@@ -698,28 +854,24 @@ void Escena::dibujarSeleccion(){
          glPushMatrix();
             glTranslatef(10,63,-10) ;
             glScalef (5,5,5) ;
-            glColor3ub(50,104,255) ;
             peonesp->draw() ;
          glPopMatrix();
 
          glPushMatrix();
             glTranslatef(-10,63,10) ;
             glScalef (5,5,5) ;
-            glColor3ub(50,255,190) ;
             peondif->draw() ;
          glPopMatrix();
 
          glPushMatrix();
             glTranslatef(-20,63,-20) ;
             glScalef (0.1,0.1,0.1) ;
-            glColor3ub(0,255,0) ;
             tetraedro->draw() ;
          glPopMatrix();
 
          glPushMatrix() ;
             glScalef(100,100,100) ;
             glRotatef(-90,1,0,0) ;
-            glColor3ub(255,0,255) ;
             banco -> draw() ;
          glPopMatrix() ;
 
@@ -730,19 +882,16 @@ void Escena::dibujarSeleccion(){
          glPushMatrix();
             glTranslatef(0,110,0);
             glScalef (0.6,0.6,0.6) ;
-            glColor3ub(255,202,212) ;
             cono->draw() ;
          glPopMatrix();
 
          glPushMatrix();
-            glColor3ub(255,111,138) ;
             cilindro->draw() ;
          glPopMatrix();
 
          glPushMatrix();
             glTranslatef(0,90,0);
             glScalef (0.6,0.6,0.6) ;
-            glColor3ub(255,38,79) ;
             esfera->draw() ;
          glPopMatrix();
 
@@ -761,7 +910,7 @@ void Escena::dibujarSeleccion(){
          glTranslatef(100,-20,0) ;
          glRotatef(90,0,1,0) ;
          glScalef(0.3,0.3,0.3) ;
-         //ganso->draw() ;
+         ganso->draw() ;
       glPopMatrix() ;
 
       glPushMatrix() ;
@@ -809,16 +958,11 @@ void Escena::dibujarSeleccion(){
          cielo-> draw() ;
       glPopMatrix() ;
 
-      glPushMatrix() ;
-         glTranslatef(0,-70,200) ;
-         glScalef(100,100,100) ;
-         glRotatef(-90,1,0,0) ;
-         glColor3ub(255,0,255) ;
-         banco -> draw() ;
-      glPopMatrix() ;
-
+      if (modos[4]){
+         glEnable(GL_LIGHTING) ;
+      }
+      glEnable(GL_TEXTURE_2D) ;
       glEnable(GL_DITHER) ;
-      if (modos[3]) glEnable(GL_LIGHTING) ;
 
 }
 
@@ -874,4 +1018,93 @@ void Escena::animarModeloJerarquico(){
       ganso -> rotarCuello(animacion,animacion) ;
       luzpos2 -> translacion(animacion) ; 
    }  
+}
+
+void Escena::ratonPasado(int x, int y){
+   dibujarSeleccion() ;
+   int objeto = procesarClick(x,y) ;
+   bool activado = false ;
+   if (seleccion_camara[camaraActiva] != objeto && objeto != 0 && !activado){
+         seleccion_camara[camaraActiva] = objeto ;
+         activado = true ;
+        switch (objeto){
+           case 1 :
+              banco -> setColorSolido({0,0,1}) ;
+              banco -> setMaterial(new MaterialCian()) ;
+           break ;
+           case 2 :
+              cubo -> setColorSolido({0,0,1}) ;
+              cubo -> setMaterial(new MaterialCian()) ;
+           break ;
+           case 4 :
+              ply -> setColorSolido({0,0,1}) ;
+              ply -> setMaterial(new MaterialCian()) ;
+           break ;
+           case 5 :
+              cilindro -> setColorSolido({0,0,1}) ;
+              cilindro -> setMaterial(new MaterialCian()) ;
+           break ;
+           case 6 :
+              cono -> setColorSolido({0,0,1}) ;
+              cono -> setMaterial(new MaterialCian()) ;
+           break ;
+           case 7 :
+              esfera -> setColorSolido({0,0,1}) ;
+              esfera -> setMaterial(new MaterialCian()) ;
+           break ;
+           case 8 :
+              peonesp -> setColorSolido({0,0,1}) ;
+              peonesp -> setMaterial(new MaterialCian()) ;
+           break ;
+           case 9 :
+              peondif -> setColorSolido({0,0,1}) ;
+              peondif -> setMaterial(new MaterialCian()) ;
+           break ;
+           case 10 :
+              tetraedro -> setColorSolido({0,0,1}) ;
+              tetraedro -> setMaterial(new MaterialCian()) ;
+           break ;
+         }
+      }
+      else if (seleccion_camara[camaraActiva] == objeto || objeto == 0){
+            seleccion_camara[camaraActiva] = 0 ;
+            activado = false ;
+         switch (objeto){
+            case 1 :
+              banco -> setMaterial(new MaterialNaranja()) ;
+              banco -> setColorSolido({0.5508,0.2852,0.1445}) ;
+           break ;
+           case 2 :
+              cubo -> setMaterial(new MaterialVerde()) ;
+              cubo -> setColorSolido({1,1,1}) ;
+           break ;
+           case 4 :
+              ply -> setMaterial(new MaterialCian()) ;
+              ply -> setColorSolido({0.5,0.9,0.32}) ;
+           break ;
+           case 5 :
+              cilindro -> setMaterial(new MaterialAmarillo()) ;
+              cilindro -> setColorSolido({1,1,1}) ;
+           break ;
+           case 6 :
+              cono -> setMaterial(new MaterialMagenta()) ;
+              cono -> setColorSolido({1,1,1}) ;
+           break ;
+           case 7 :
+              esfera -> setMaterial(new MaterialMagenta()) ;
+              esfera -> setColorSolido({1,1,1}) ;
+           break ;
+           case 8 :
+              peonesp -> setMaterial(new MaterialUltraEspecular()) ;
+              peonesp -> setColorSolido({0.1,0.1,0.1}) ;
+           break ;
+           case 9 :
+              peondif -> setMaterial(new MaterialUltraDifuso()) ;
+              peondif -> setColorSolido({0.9,0.9,0.9}) ;
+           break ;
+              tetraedro -> setMaterial(new MaterialCian()) ;
+              tetraedro -> setColorSolido({0,0.5,0.5}) ;
+           break ;
+         }
+      }
 }

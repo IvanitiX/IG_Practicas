@@ -11,7 +11,9 @@ class Petalo: public Malla3D{
     public:
         Petalo() ;
         void draw(int modoDib, std::vector<bool>  modos) ;
+        void draw() ;
         void setColorPetalo(Tupla3f color) ;
+        void setColorPetaloInv(Tupla3f color) ;
     protected:
         Esfera * petEsfera = nullptr ;
 };
@@ -20,6 +22,7 @@ class Tulipa: public Malla3D{
     public:
         Tulipa() ;
         void draw(int modoDib, std::vector<bool>  modos) ;
+        void draw() ;
         void caerPetalo(float incremento_x, float incremento_y) ;
     protected:
         Petalo * tulPetaloAbajo = nullptr ;
@@ -35,6 +38,7 @@ class Flor: public Malla3D{
     public:
         Flor() ;
         void draw(int modoDib, std::vector<bool>  modos) ;
+        void draw() ;
         void caerPetalo(float incremento_x, float incremento_y) ;
     protected:
         Tulipa * florTulipa = nullptr ;
@@ -48,6 +52,7 @@ class Pierna: public Malla3D{
     public:
         Pierna() ;
         void draw(int modoDib, std::vector<bool>  modos) ;
+        void draw() ;
     protected:
         Cubo * piePlanta = nullptr ;
         Cilindro * pieCilindro = nullptr ;
@@ -58,6 +63,7 @@ class Cuerpo: public Malla3D{
     public:
         Cuerpo();
         void draw(int modoDib, std::vector<bool>  modos) ;
+        void draw() ;
         void rotarPiernaDerecha(float incremento_z) ;
         void rotarPiernaIzquierda(float incremento_z) ;
     protected:
@@ -74,6 +80,7 @@ class Cabeza: public Malla3D{
     public:
         Cabeza() ;
         void draw(int modoDib, std::vector<bool>  modos) ;
+        void draw() ;
         void caerPetalo(float incremento_x, float incremento_y) ;
         
     protected:
@@ -88,6 +95,7 @@ class Cuello: public Malla3D{
     public:
         Cuello() ;
         void draw(int modoDib, std::vector<bool>  modos) ;
+        void draw() ;
         void caerPetalo(float incremento_x, float incremento_y) ;
         void rotarCabeza(float incremento_x, float incremento_y, float incremento_z) ;
     protected:
@@ -102,6 +110,7 @@ class Ganso: public Malla3D{
     public:
         Ganso() ;
         void draw(int modoDib, std::vector<bool>  modos) ;
+        void draw() ;
         void rotarCuello(float incremento_x , float incremento_y) ;
         void rotarCabeza(float incremento_x, float incremento_y, float incremento_z) ;
         void caerPetalo(float incremento_x, float incremento_y) ;

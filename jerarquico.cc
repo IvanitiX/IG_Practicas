@@ -10,23 +10,30 @@ Tulipa::Tulipa(){
     caidaPetaloY = 0 ;
     tulPetaloAbajo = new Petalo() ;
     tulPetaloAbajo -> setColorPetalo({1,0,0}) ; //Rojo
+    tulPetaloAbajo -> setColorPetaloInv({1,0.5,0}) ; 
     tulPetaloArriba = new Petalo() ;
     tulPetaloArriba -> setColorPetalo({0,1,0}) ; //Verde
+    tulPetaloArriba -> setColorPetaloInv({1,0.5,0}) ; 
     tulPetaloDer = new Petalo() ;
     tulPetaloDer -> setColorPetalo({0,0,1}) ; //Azul
+    tulPetaloDer -> setColorPetaloInv({1,0.5,0}) ; 
     tulPetaloIzq = new Petalo() ;
     tulPetaloIzq -> setColorPetalo({0,1,1}) ; //Cian. MOVER ESTE PETALO
+    tulPetaloIzq -> setColorPetaloInv({1,0.5,0}) ; 
     tulCentro = new Esfera(20,20,20.0) ;
     tulCentro -> setColorSolido({0.5,0.5,0}) ;
+    tulCentro -> setColorInvisible({1,0.5,0}) ;
     tulCentro -> setMaterial(new MaterialAmarillo()) ;
 }
 
 Flor::Flor(){
     florHoja = new Esfera(30,30,10.0) ;
     florHoja -> setColorSolido({0,1,0}) ;
+    florHoja -> setColorInvisible({1,0.5,0});
     florHoja -> setMaterial(new MaterialVerde()) ;
     florTallo = new Cilindro(1,20,30.0,10.0) ;
     florTallo -> setColorSolido({0,1,0}) ;
+    florTallo -> setColorInvisible({1,0.5,0}) ;
     florTallo -> setMaterial(new MaterialVerde()) ;
     florTulipa = new Tulipa() ;
 }
@@ -34,12 +41,15 @@ Flor::Flor(){
 Pierna::Pierna(){
     piePlanta = new Cubo(20.0) ;
     piePlanta -> setColorSolido({1,0.5,0}) ;
+    piePlanta -> setColorInvisible({1,0.5,0}) ;
     piePlanta -> setMaterial(new MaterialNaranja()) ;
     pieEsfera = new Esfera(20,20,20.0) ;
     pieEsfera -> setColorSolido({0.95,0.95,0.95}) ;
+    pieEsfera -> setColorInvisible({1,0.5,0}) ;
     pieEsfera -> setMaterial(new MaterialBlanco()) ;
     pieCilindro = new Cilindro(1,20,30.0,20.0) ;
     pieCilindro -> setColorSolido({1,0.5,0}) ;
+    pieCilindro -> setColorInvisible({1,0.5,0}) ;
     pieCilindro -> setMaterial(new MaterialNaranja()) ;
 }
 
@@ -50,9 +60,11 @@ Cuerpo::Cuerpo(){
     omega = false ;
     cuerCentro = new Esfera(20,20,20.0) ;
     cuerCentro -> setColorSolido({0.95,0.95,0.95}) ;
+    cuerCentro -> setColorInvisible({1,0.5,0}) ;
     cuerCentro -> setMaterial(new MaterialBlanco()) ;
     cuerCola = new Cono(1,20,30.0,20.0) ;
     cuerCola -> setColorSolido({0.95,0.95,0.95}) ;
+    cuerCola -> setColorInvisible({1,0.5,0}) ;
     cuerCola -> setMaterial(new MaterialBlanco()) ;
     cuerPieDer = new Pierna() ;
     cuerPieIzq = new Pierna() ;
@@ -61,15 +73,19 @@ Cuerpo::Cuerpo(){
 Cabeza::Cabeza(){
     cabCentro = new Esfera(20,20,20.0) ;
     cabCentro -> setColorSolido({0.95,0.95,0.95}) ;
+    cabCentro -> setColorInvisible({1,0.5,0}) ;
     cabCentro -> setMaterial(new MaterialBlanco()) ;
     cabOjoDer = new Esfera(20,20,20.0) ;
     cabOjoDer -> setColorSolido({0,0,0}) ;
+    cabOjoDer -> setColorInvisible({1,0.5,0}) ;
     cabOjoDer -> setMaterial(new MaterialNegro()) ;
     cabOjoIzq = new Esfera(20,20,20.0) ;
     cabOjoIzq -> setColorSolido({0,0,0}) ;
+    cabOjoIzq -> setColorInvisible({1,0.5,0}) ;
     cabOjoIzq -> setMaterial(new MaterialNegro()) ;
     cabPico = new Tetraedro(10.0) ;
     cabPico -> setColorSolido({1,0.5,0}) ;
+    cabPico -> setColorInvisible({1,0.5,0}) ;
     cabPico -> setMaterial(new MaterialNaranja()) ;
     cabFlor = new Flor() ;
 }
@@ -84,6 +100,7 @@ Cuello::Cuello(){
     cueCabeza = new Cabeza() ;
     cueCentro = new Cilindro(1,20,30.0,20.0) ;
     cueCentro -> setColorSolido({0.95,0.95,0.95}) ;
+    cueCentro -> setColorInvisible({1,0.5,0}) ;
     cueCentro -> setMaterial(new MaterialBlanco()) ;
 }
 
@@ -266,10 +283,183 @@ void Ganso::draw(int modoDib, std::vector<bool>  modos){
     glPopMatrix() ;
 }
 
+/*Funciones de dibujado para seleccion*/
+void Petalo::draw(){
+    glPushMatrix() ;
+        glTranslatef(-30,30,0) ;
+        glRotatef(45,0,0,1) ;
+        glScalef(0.2,2,1) ;
+        petEsfera -> draw() ;
+    glPopMatrix() ;
+}
+void Tulipa::draw(){
+    glPushMatrix() ;
+        glPushMatrix() ;
+            tulPetaloAbajo -> draw() ;
+        glPopMatrix() ;
+            glRotatef(90.0,0,1,0) ;
+            tulPetaloDer -> draw() ;
+        glPushMatrix() ;
+            glRotatef(180.0,0,1,0) ;
+            tulPetaloArriba -> draw() ;
+        glPopMatrix() ;
+        glPushMatrix() ;
+            glTranslatef(-caidaPetaloX,-caidaPetaloY,0) ;
+            glRotatef(100.0,0,1,0) ;
+            tulPetaloIzq -> draw() ;
+        glPopMatrix() ;
+        glPushMatrix() ;
+            glTranslatef(0,30,0) ;
+            glScalef(1.0,1.0,1.0) ;
+            tulCentro -> draw() ;
+        glPopMatrix() ;
+    glPopMatrix() ;
+}
+
+void Flor::draw(){
+    glPushMatrix() ;
+        glPushMatrix() ;
+            glTranslatef(20,-20,0) ;
+            glScalef(2.0,1.0,0.3) ;
+            florHoja -> draw() ;
+        glPopMatrix() ;
+        glPushMatrix() ;
+            glTranslatef(0,-100,0) ;
+            glScalef(0.4,4.0,0.4) ;
+            florTallo -> draw() ;
+        glPopMatrix() ;
+        glPushMatrix() ;
+            florTulipa -> draw() ;
+        glPopMatrix() ;
+    glPopMatrix() ;
+}
+
+void Pierna::draw(){
+    glPushMatrix() ;
+        glTranslatef(0,-100,0) ;
+        glPushMatrix() ;
+            glTranslatef(10,0,0) ;
+            glScalef(4,0.6,2) ;
+            piePlanta -> draw() ;
+        glPopMatrix () ;
+        glPushMatrix() ;
+            glTranslatef(0,5,0) ;
+            glScalef(0.4,2,0.4) ;
+            pieCilindro -> draw() ;
+        glPopMatrix () ;
+        glPushMatrix() ;
+            glTranslatef(0,90,0) ;
+            glScalef(1.5,2,1.3) ;
+            pieEsfera -> draw() ;
+        glPopMatrix () ;
+    glPopMatrix() ;
+}
+
+void Cuerpo::draw(){
+    glPushMatrix() ;
+        glPushMatrix() ;
+            glTranslatef(0,-30,-60) ;
+            glRotatef(rotacionAlfa,0,0,1) ;
+            cuerPieDer -> draw() ;
+        glPopMatrix() ;
+        glPushMatrix() ;
+            glTranslatef(0,-30,60) ;
+            glRotatef(rotacionOmega,0,0,1) ;
+            cuerPieIzq -> draw() ;
+        glPopMatrix() ;
+        glPushMatrix() ;
+            glRotatef(3,0,0,1) ;
+            glScalef(6,4,4) ;
+            cuerCentro -> draw() ;
+        glPopMatrix() ;
+        glPushMatrix() ;
+            glTranslatef(-95,0,0) ;
+            glRotatef(90,0,0,1) ;
+            glScalef(2.3,2.3,2.3) ;
+            cuerCola -> draw() ;
+        glPopMatrix() ;
+    glPopMatrix() ;
+}
+
+void Cabeza::draw(){
+    glPushMatrix() ;
+        glTranslatef(40,0,0) ;
+        glPushMatrix() ;
+            glScalef(3.0,2.0,2.0) ;
+            cabCentro -> draw() ;
+        glPopMatrix() ;
+        glPushMatrix() ;
+            glTranslatef(25,20,30) ;
+            glScalef(0.4,0.4,0.4) ;
+            cabOjoDer -> draw() ;
+        glPopMatrix() ;
+        glPushMatrix() ;
+            glTranslatef(25,20,-30) ;
+            glScalef(0.4,0.4,0.4) ;
+            cabOjoIzq -> draw() ;
+        glPopMatrix() ;
+        glPushMatrix() ;
+            glTranslatef(60,0,0) ;
+            glRotatef(-90,1,0,0) ;
+            glRotatef(-90.0,0,0,1) ;
+            glScalef(4,4,4) ;
+            cabPico -> draw() ;
+        glPopMatrix() ;
+        glPushMatrix() ;
+            glTranslatef(60,-3,-35) ;
+            glRotatef(180,0,0,1) ;
+            glRotatef(-90,0,1,0) ;
+            glRotatef(90.0,0,0,1) ;
+            glScalef(0.6,0.6,0.6) ;
+            cabFlor -> draw() ;
+        glPopMatrix() ;
+    glPopMatrix() ;
+}
+
+void Cuello::draw(){
+    glPushMatrix() ;
+        glPushMatrix() ;
+            glPushMatrix() ;
+                glRotatef(-40,0,0,1) ;
+                glTranslatef(0,20,0) ;
+                glScalef(0.8,5,0.8) ;
+                cueCentro -> draw() ;
+            glPopMatrix() ;
+        glPopMatrix() ;
+
+        glPushMatrix() ;
+            glTranslatef(100,120,0) ;
+            glRotatef(-10,0,1,1) ;
+            glRotatef(rotacionDelta,1,0,0) ;
+            glRotatef(rotacionEpsilon,0,1,0) ;
+            glRotatef(rotacionChi,0,0,1) ;
+            cueCabeza -> draw() ;
+        glPopMatrix() ;
+    glPopMatrix() ;
+}
+
+void Ganso::draw(){
+    glPushMatrix() ;
+        glPushMatrix() ;
+            glTranslatef(90,30,0) ;
+            glRotatef(rotacionBeta,1,0,0) ;
+            glRotatef(rotacionGamma,0,0,1) ;
+            ganCuello -> draw() ;
+        glPopMatrix() ;
+        glPushMatrix() ;
+            glScalef(1.1,1.1,1.1) ;
+            ganCuerpo -> draw() ;
+        glPopMatrix() ;
+    glPopMatrix() ;
+}
 
 /*Funciones de alteración de elementos*/
 void Petalo::setColorPetalo(Tupla3f color){
     petEsfera -> setColorSolido (color) ;
+}
+
+void Petalo::setColorPetaloInv(Tupla3f color){
+    petEsfera -> setColorInvisible (color) ;
 }
 
 void Tulipa::caerPetalo(float incremento_x, float incremento_y){
