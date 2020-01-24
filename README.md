@@ -1,6 +1,8 @@
 # Repositorio de prácticas de Informática Gráfica
 Este repositorio contiene las prácticas realizadas en esta asignatura en el curso 2019/20 en el grupo A. 
 
+¡Cuidado! Estas prácticas contienen errores, mirad los Issues.
+
 ## Idea de la escena 
 (Luego no se cumple la mitad pero la esencia está)
 
